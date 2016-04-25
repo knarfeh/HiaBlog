@@ -75,6 +75,7 @@ build/
 .builds
 *.pidb
 *.scc
+*.pyc
 
 # Visual C++ cache files
 ipch/
@@ -203,3 +204,5 @@ pip-log.txt
 .mr.developer.cfg
 
 #Mine
+.idea/
+ENV/
