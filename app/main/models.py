@@ -8,6 +8,7 @@ from flask import url_for
 
 from hia import db
 
+
 class Post(db.Document):
     title = db.StringField(max_length=255, default='new blog', required=True)
     slug = db.StringField(max_length=255, required=True)
@@ -22,7 +23,7 @@ class Post(db.Document):
     is_draft = db.BooleanField(default=False)
 
     def get_absolute_url(self):
-        return url_for('post', kwargs={"slug": self.slug})
+        return url_for('post_detail', kwargs={"slug": self.slug})
 
     def __unicode__(self):
         return self.title
