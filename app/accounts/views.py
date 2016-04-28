@@ -25,6 +25,20 @@ def login():
     return render_template('accounts/login.html', form=form)
 
 
+def register():
+    form = forms.RegistrationForm()
+    if form.validate_on_submit():
+        user = models.User()
+        user.username = form.username.data
+        user.password = form.password.data
+        user.email = form.email.data
+        user.save()
+
+        return redirect(url_for('main.index'))
+
+    return render_template('accounts/registration.html', form=form)
+
+
 @login_required
 def logout():
     logout_user()
