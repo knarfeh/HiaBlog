@@ -3,3 +3,6 @@ flask-script==2.0.5
 WTForms==2.1
 mongoengine==0.10.6
 flask_mongoengine==0.7.5
+flask-login==0.3.2
+Flask-WTF==0.12
+
