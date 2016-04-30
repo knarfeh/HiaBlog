@@ -7,10 +7,6 @@ from flask.views import MethodView
 
 from . import models
 
-##################################
-# Blog View
-##################################
-
 
 def test():
     return 'Test page'
@@ -33,12 +29,3 @@ def post_detail(slug):
         abort(404)
 
 
-#######################################
-# Blog Admin
-#######################################
-
-class AdminIndex(MethodView):
-    template_name = 'blog_admin/index.html'
-
-    def get(self):
-        return render_template(self.template_name)
