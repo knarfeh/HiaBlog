@@ -9,7 +9,7 @@
                 <div class="site-heading">
                     <h1>Hia Blog</h1>
                     <hr class="small">
-                    <span class="subheading">Tech Rocks! <a href="#"><i class="fa fa-rss"></i></a></span>
+                    <span class="subheading">黑客态度  侠义精神<a href="#"><i class="fa fa-rss"></i></a></span>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
                 <p class="post-subtitle">
                     {{ post.abstract }}
                 </p>
-                <p class="post-meta">Posted by <a href="#">author</a> on {{ post.pub_time.strftime('%Y/%m/%d %H:%M:%S') }}</p>
+                <p class="post-meta">Posted by <a href="#">{{ post.author.username }}</a> on {{ post.pub_time.strftime('%Y/%m/%d %H:%M:%S') }}</p>
                 <p class="post-meta">category: <a href="#">None</a></p>
             </div>
             {% if not loop.last %}

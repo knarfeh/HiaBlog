@@ -6,7 +6,7 @@ import markdown2
 from flask import url_for
 
 # from mongoengine import *
-
+from accounts.models import User
 from hia import db
 
 
@@ -18,7 +18,7 @@ class Post(db.Document):
     pub_time = db.DateTimeField(default=datetime.datetime.now(), required=True)
     update_time = db.DateTimeField(default=datetime.datetime.now(), required=True)
     content_html = db.StringField(required=True)
-    # author = db.ForeignKey(User)
+    author = db.ReferenceField(User)
     # tags = db.ManyToManyField('Tag', blank=True)
     # category = db.ForeignKey('Category', null=True, blank=True)
     is_draft = db.BooleanField(default=False)
