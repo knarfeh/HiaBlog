@@ -60,7 +60,18 @@
             
             <h3>Category</h3><hr/>
             <div class="list-group">
-                Nothong yet!
+                {% for category in categories %}
+                    {% if cur_category == category %}
+                        <a href="?category={{ category }}" class="list-group-item category-list active">{{ category }}
+                        <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small>
+                        <span class="badge">&nbsp;1000&nbsp;</span></a>
+                    {% else %}
+                        <a href="?category={{ category }}" class="list-group-item category-list ">{{ category }}
+                        <span class="badge">&nbsp;1000&nbsp;</span></a>
+                    {% endif %}
+
+                {% endfor %}
+
             </div>
         </div>
     </div>

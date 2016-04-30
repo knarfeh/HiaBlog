@@ -15,6 +15,7 @@ class PostForm(Form):
     slug = StringField('Slug', validators=[Required()])
     raw = TextAreaField('Content')
     abstract = TextAreaField('Abstract')
+    category = StringField('Category')
     post_id = HiddenField('post_id')
 
     def validate_slug(self, field):
