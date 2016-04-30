@@ -17,6 +17,7 @@
             <div class="row">
                 {% import "_form.html" as forms %}
                 {{ form.csrf_token() }}
+                {{ form.post_id() }}
                 {% if form.title.errors %}
                     <div class="clearfix has-error form-group">
                     {{ form.title.label }}
