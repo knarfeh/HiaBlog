@@ -20,7 +20,7 @@ def login():
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))
 
-        flash('Invalid username or password')
+        flash('Invalid username or password', 'danger')
 
     return render_template('accounts/login.html', form=form)
 
@@ -42,5 +42,5 @@ def register():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out')
+    flash('You have been logged out', 'logout')
     return redirect(url_for('main.index'))
