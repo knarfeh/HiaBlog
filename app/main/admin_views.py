@@ -3,7 +3,7 @@
 
 from flask import request, redirect, render_template, url_for, abort, flash
 from flask.views import MethodView
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from . import models, forms
 from accounts.models import User
@@ -15,6 +15,7 @@ def get_current_user():
 
 
 class AdminIndex(MethodView):
+    decorators = [login_required]
     template_name = 'blog_admin/index.html'
 
     def get(self):
@@ -22,6 +23,7 @@ class AdminIndex(MethodView):
 
 
 class PostsList(MethodView):
+    decorators = [login_required]
     template_name = 'blog_admin/posts.html'
 
     def get(self):
