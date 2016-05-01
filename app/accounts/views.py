@@ -6,6 +6,7 @@ from flask import render_template, redirect, request, flash, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 
 from . import models, forms
+from hia.config import HiaBlogSettings
 
 
 def login():
@@ -26,6 +27,10 @@ def login():
 
 
 def register():
+    if not HiaBlogSettings['allow_registration']:
+        msg = 'Register is forbidden, please contact administrator'
+        return msg
+
     form = forms.RegistrationForm()
     if form.validate_on_submit():
         user = models.User()

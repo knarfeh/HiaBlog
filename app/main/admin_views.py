@@ -6,6 +6,7 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from . import models, forms
+from hia.config import HiaBlogSettings
 from accounts.models import User
 
 
@@ -19,7 +20,8 @@ class AdminIndex(MethodView):
     template_name = 'blog_admin/index.html'
 
     def get(self):
-        return render_template(self.template_name)
+        blog_meta = HiaBlogSettings['blog_meta']
+        return render_template(self.template_name, blog_meta=blog_meta)
 
 
 class PostsList(MethodView):
@@ -85,7 +87,6 @@ class Post(MethodView):
         post.abstract = abstract if abstract else post.raw[:140]
         post.category = request.form.get('category')
         post.tags = [tag.strip() for tag in form.tags_str.data.split(',')]
-
 
         if request.form.get('publish'):
             post.is_draft = False

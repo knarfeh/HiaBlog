@@ -25,6 +25,20 @@ class Config(object):
 class DevConfig(Config):
     DEBUG = True
 
+
+HiaBlogSettings = {
+    'allow_registration': False,
+    'blog_meta': {
+        'name': 'Hia Blog',
+        'subtitle': u'但行好事,莫问前程',
+        'description': 'Oct Blog Description',
+        'owner': 'knarfeh',
+        'keywords': ['Python', 'Flask', 'Docker', 'MongoDB']
+    }
+
+}
+
+
 config = {
     'dev': DevConfig,
     'default': DevConfig
