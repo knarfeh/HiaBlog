@@ -56,7 +56,24 @@
         </div>
         <div class="col-lg-3 col-md-2">
             <h3>Tags</h3><hr/>
-            Nothing yet!
+            {% for tag in tags %}
+                <a href="?tag={{tag}}" class="post-tag">
+                    {% if tag == cur_tag %}
+                    <span class="label label-primary">
+                        {{ tag }}
+                        <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small>
+                    </span>
+
+                    {% else %}
+                    <span class="label label-default">
+                        {{ tag }}
+                    </span>
+
+                    {% endif %}
+
+                </a>
+                &nbsp;
+            {% endfor %}
             
             <h3>Category</h3><hr/>
             <div class="list-group">

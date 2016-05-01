@@ -20,14 +20,20 @@ def list_posts():
     posts = models.Post.objects.all()
     # categories = posts.distinct('category')
     cur_category = request.args.get('category')
+    tags = posts.distinct('tags')
+
+    cur_tag = request.args.get('tag')
+
     if cur_category:
         posts = posts.filter(category=cur_category)
+
+    if cur_tag:
+        posts = posts.filter(tags=cur_tag)
 
     # group by aggregate
     category_cursor = models.Post._get_collection().aggregate([{
         '$group': {
             '_id': {
-                'post': '$post',
                 'category': '$category'
             },
             'name': {
@@ -42,7 +48,8 @@ def list_posts():
     data = {
         'posts': posts,
         'cur_category': cur_category,
-        'category_cursor': category_cursor
+        'category_cursor': category_cursor,
+        'tags': tags
     }
     return render_template('main/index.html', **data)
 

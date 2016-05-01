@@ -20,7 +20,7 @@ class Post(db.Document):
     content_html = db.StringField(required=True)
     author = db.ReferenceField(User)
     category = db.StringField(default='default')
-    # tags = db.ManyToManyField('Tag', blank=True)
+    tags = db.ListField()
     is_draft = db.BooleanField(default=False)
 
     def get_absolute_url(self):
@@ -31,7 +31,6 @@ class Post(db.Document):
         # self.content_html = self.raw
         self.content_html = markdown2.markdown(self.raw, extras=['code-friendly', 'fenced-code-blocks']).encode('utf-8')
         return super(Post, self).save(*args, **kwargs)
-
 
     def __unicode__(self):
         return self.title

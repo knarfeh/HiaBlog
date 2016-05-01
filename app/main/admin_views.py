@@ -42,10 +42,16 @@ class Post(MethodView):
         display_slug = slug if slug else 'slug-value'
 
         if not form:
-            post = models.Post.objects.get_or_404(slug=slug) if slug else None
-            form = forms.PostForm(obj=post)
+            if slug:
+                post = models.Post.objects.get_or_404(slug=slug)
+                post.post_id = str(post.id)
+                post.tags_str = ', '.join(post.tags)
+                form = forms.PostForm(obj=post)
+            else:
+                form = forms.PostForm()
 
-        context = {'edit_flag': edit_flag, 'form': form, 'display_slug': display_slug}
+        categories = models.Post.objects.distinct('category')
+        context = {'edit_flag': edit_flag, 'form': form, 'display_slug': display_slug, 'categories': categories}
         return context
 
     def get(self, slug=None, form=None):
@@ -69,6 +75,8 @@ class Post(MethodView):
         abstract = form.abstract.data.strip()
         post.abstract = abstract if abstract else post.raw[:140]
         post.category = request.form.get('category')
+        post.tags = [tag.strip() for tag in form.tags_str.data.split(',')]
+
 
         if request.form.get('publish'):
             post.is_draft = False
