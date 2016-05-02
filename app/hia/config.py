@@ -32,9 +32,10 @@ HiaBlogSettings = {
         'name': os.environ.get('name') or 'Hia Blog',
         'subtitle': os.environ.get('subtitle') or 'Hia Blog Subtitle',
         'description': os.environ.get('description') or 'Hia Blog Description',
-        'owner': os.environ.get('owner') or 'Knarfeh',
-        'keywords': [keyword.strip() for keyword in os.environ.get('keywords').split(',')]
-        if os.environ.get('keywords') else ['python', 'Flask', 'Docker', 'MongoDB']
+        'owner': os.environ.get('owner') or 'knarfef',
+        'keywords': os.environ.get('keywords') or 'python,django,flask,docker,MongoDB',
+        'google_site_verification': '',
+        'baidu_site_verification': '',
     }
 
 }
