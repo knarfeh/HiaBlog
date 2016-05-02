@@ -99,7 +99,7 @@ class User(MethodView):
         if not form:
             user = models.User.objects.get_or_404(username=username)
             form = forms.UserForm(obj=user)
-        data = {'form':form}
+        data = {'form': form}
         return data
 
     def get(self, username, form=None):
@@ -113,11 +113,12 @@ class User(MethodView):
             if user.email != form.email.data:
                 user.is_email_confirmed = False
             user.email = form.email.data
-            user.is_active = form.is_active.data
+            # user.is_active = form.is_active.data
             user.is_superuser = form.is_superuser.data
             user.role = form.role.data
             user.save()
             flash('Succeed to update user details', 'success')
-            return redirect(url_for('accounts.user', username=username))
+            return redirect(url_for('accounts.edit_user', username=username))
+
         return self.get(username, form)
 

@@ -15,5 +15,6 @@ accounts.add_url_rule('/add-user/', 'add_user', views.add_user, methods=['GET', 
 
 accounts.add_url_rule('/add-user/', 'add_user', views.add_user, methods=['GET', 'POST'])
 accounts.add_url_rule('/users/', view_func=views.Users.as_view('users'))
-accounts.add_url_rule('/users/<username>', view_func=views.User.as_view('user'))
+accounts.add_url_rule('/users/edit/<username>', view_func=views.User.as_view('edit_user'))
+
 

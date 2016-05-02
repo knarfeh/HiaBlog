@@ -27,7 +27,7 @@ class DevConfig(Config):
 
 
 HiaBlogSettings = {
-    'allow_registration': False,
+    'allow_registration': True,
     'blog_meta': {
         'name': os.environ.get('name') or 'Hia Blog',
         'subtitle': os.environ.get('subtitle') or 'Hia Blog Subtitle',
