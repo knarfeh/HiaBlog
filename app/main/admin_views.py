@@ -105,3 +105,21 @@ class Post(MethodView):
             return redirect('{0}?draft=true'.format(redirect_url))
 
         return self.get(slug, form)
+
+    def delete(self, slug):
+        post = models.Post.objects.get_or_404(slug=slug)
+        post_type = post.post_type
+        is_draft = post.is_draft
+        post.delete()
+
+        redirect_url = url_for('blog_admin.pages') if post_type == 'page' else url_for('blog_admin.posts')
+        if is_draft:
+            redirect_url += '?draft=true'
+
+        flash('Succeed to delete the {0}'.format(post_type), 'success')
+
+        if request.args.get('ajax'):
+            return 'success'
+
+        return redirect(redirect_url)
+
