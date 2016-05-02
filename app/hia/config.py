@@ -30,7 +30,7 @@ HiaBlogSettings = {
     'allow_registration': os.environ.get('allow_registration', 'false').lower() == 'true',
     'blog_meta': {
         'name': os.environ.get('name') or 'Hia Blog',
-        'subtitle': os.environ.get('subtitle') or 'Hia Blog Subtitle',
+        'subtitle': os.environ.get('subtitle') or '',
         'description': os.environ.get('description') or u'黑客态度 侠义精神',
         'owner': os.environ.get('owner') or 'knarfef',
         # 'keywords': os.environ.get('keywords') or 'python,django,flask,docker,MongoDB',
