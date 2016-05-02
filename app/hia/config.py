@@ -27,7 +27,7 @@ class DevConfig(Config):
 
 
 HiaBlogSettings = {
-    'allow_registration': True,
+    'allow_registration': os.environ.get('allow_registration', 'false').lower() == 'true',
     'blog_meta': {
         'name': os.environ.get('name') or 'Hia Blog',
         'subtitle': os.environ.get('subtitle') or 'Hia Blog Subtitle',
@@ -39,15 +39,26 @@ HiaBlogSettings = {
     },
 
     'pagination': {
-        'per_page': 2,
-        'admin_per_page': 3,
+        'per_page': int(os.environ.get('per_page', 5)),
+        'admin_per_page': int(os.environ.get('admin_per_page', 10)),
+
     },
 
 
 }
 
 
+class PrdConfig(Config):
+    # DEBUG = False
+    DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
+    MONGODB_SETTINGS = {
+            'db': 'OctBlog',
+            'host': os.environ.get('MONGO_HOST') or 'localhost',
+            # 'port': 12345
+    }
+
 config = {
     'dev': DevConfig,
-    'default': DevConfig
+    'prd': PrdConfig,
+    'default': DevConfig,
 }
