@@ -8,10 +8,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from hia import db, login_manager
 
 # ROLES = ('admin', 'editor', 'writer', 'reader')
-ROLES = (('admin', 'admin'),
-            ('editor', 'editor'),
-            ('writer', 'writer'),
-            ('reader', 'reader'))
+ROLES = (
+    ('admin', 'admin'),
+    ('editor', 'editor'),
+    ('writer', 'writer'),
+    ('reader', 'reader')
+)
 
 
 class User(UserMixin, db.Document):

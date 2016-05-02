@@ -13,6 +13,7 @@ from hia import db
 class Post(db.Document):
     title = db.StringField(max_length=255, default='new blog', required=True)
     slug = db.StringField(max_length=255, required=True, unique=True)
+    fix_slug = db.StringField(max_length=255, required=False)
     abstract = db.StringField()
     raw = db.StringField(required=True)
     pub_time = db.DateTimeField(default=datetime.datetime.now(), required=True)

@@ -31,11 +31,12 @@ HiaBlogSettings = {
     'blog_meta': {
         'name': os.environ.get('name') or 'Hia Blog',
         'subtitle': os.environ.get('subtitle') or 'Hia Blog Subtitle',
-        'description': os.environ.get('description') or 'Hia Blog Description',
+        'description': os.environ.get('description') or u'黑客态度 侠义精神',
         'owner': os.environ.get('owner') or 'knarfef',
         # 'keywords': os.environ.get('keywords') or 'python,django,flask,docker,MongoDB',
-        'google_site_verification': '',
-        'baidu_site_verification': '',
+        'google_site_verification': os.environ.get('google_site_verification') or '12345678',
+        'baidu_site_verification': os.environ.get('baidu_site_verification') or '87654321',
+
     },
 
     'pagination': {
