@@ -9,6 +9,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_principal import Identity, AnonymousIdentity, identity_changed
 
 from . import models, forms
+from permissions import admin_permission
 from hia.config import HiaBlogSettings
 
 
@@ -86,6 +87,7 @@ def get_current_user():
 
 
 class Users(MethodView):
+    decorators = [login_required, admin_permission.require(401)]
     template_name = 'accounts/users.html'
     def get(self):
         users = models.User.objects.all()
@@ -93,6 +95,7 @@ class Users(MethodView):
 
 
 class User(MethodView):
+    decorators = [login_required, admin_permission.require(401)]
     template_name = 'accounts/user.html'
 
     def get_context(self, username, form=None):

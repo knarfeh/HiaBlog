@@ -27,8 +27,13 @@ def on_identity_loaded(sender, identity):
     # identity with the roles that the user provides
     if hasattr(current_user, 'role'):
         # for role in current_user.roles:
-        if current_user.is_superuser:
-            identity.provides.add(su_need)
-
         identity.provides.add(RoleNeed(current_user.role))
+    
+    # if current_user.is_superuser:
+    if hasattr(current_user, 'is_superuser') and current_user.is_superuser:
+        identity.provides.add(su_need)
 
+        # return current_user.role
+
+    identity.allow_edit = editor_permission.allows(identity)
+    identity.allow_admin = admin_permission.allows(identity)
