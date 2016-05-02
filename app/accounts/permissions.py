@@ -6,14 +6,12 @@ from flask_principal import Permission, RoleNeed, UserNeed, identity_loaded
 from flask_login import current_user
 
 admin_permission = Permission(RoleNeed('admin'))
-editor_permission = Permission(RoleNeed('editor'))
-author_permission = Permission(RoleNeed('author'))
-reader_permission = Permission(RoleNeed('reader'))
+editor_permission = Permission(RoleNeed('editor')).union(admin_permission)
+writer_permission = Permission(RoleNeed('writer')).union(editor_permission)
+reader_permission = Permission(RoleNeed('reader')).union(writer_permission)
 
 
 @identity_loaded.connect
-# @identity_loaded.connect # Both of this and the following works
-@identity_loaded.connect_via(current_app)
 def on_identity_loaded(sender, identity):
     # Set the identity user object
     identity.user = current_user

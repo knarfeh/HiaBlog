@@ -7,7 +7,7 @@ from flask_login import current_user, login_required
 
 from . import models, forms
 from accounts.models import User
-from accounts.permissions import admin_permission, editor_permission, author_permission, reader_permission
+from accounts.permissions import admin_permission, editor_permission, writer_permission, reader_permission
 from hia.config import HiaBlogSettings
 from accounts.models import User
 
@@ -41,7 +41,7 @@ class PostsList(MethodView):
 
 
 class Post(MethodView):
-    decorators = [login_required, admin_permission.require(401)]
+    decorators = [login_required, editor_permission.require(401)]
     template_name = 'blog_admin/post.html'
 
     def get_context(self, slug=None, form=None, post_type='post'):

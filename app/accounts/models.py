@@ -7,6 +7,12 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from hia import db, login_manager
 
+# ROLES = ('admin', 'editor', 'writer', 'reader')
+ROLES = (('admin', 'admin'),
+            ('editor', 'editor'),
+            ('writer', 'writer'),
+            ('reader', 'reader'))
+
 
 class User(UserMixin, db.Document):
     username = db.StringField(max_length=255, required=True)
@@ -15,7 +21,10 @@ class User(UserMixin, db.Document):
     create_time = db.DateTimeField(default=datetime.datetime.now, required=True)
     last_login = db.DateTimeField(default=datetime.datetime.now, required=True)
     is_email_confirmed = db.BooleanField(default=False)
-    role = db.StringField(max_length=32, default='reader')
+    is_active = db.BooleanField(default=True)
+    is_superuser = db.BooleanField(default=False)
+    role = db.StringField(max_length=32, default='reader', choices=ROLES)
+
 
 
     @property
