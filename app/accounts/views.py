@@ -23,7 +23,14 @@ def login():
 
         flash('Invalid username or password', 'danger')
 
-    return render_template('accounts/login.html', form=form)
+    return render_template('blog_admin/login.html', form=form)
+
+
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out', 'success')
+    return redirect(url_for('accounts.login'))
 
 
 def register():
@@ -41,7 +48,7 @@ def register():
 
         return redirect(url_for('main.index'))
 
-    return render_template('accounts/registration.html', form=form)
+    return render_template('blog_admin/registration.html', form=form)
 
 
 @login_required
@@ -63,9 +70,3 @@ def get_current_user():
     user = models.User.objects.get(username=current_user.username)
     return user
 
-
-@login_required
-def logout():
-    logout_user()
-    flash('You have been logged out', 'logout')
-    return redirect(url_for('main.index'))

@@ -64,7 +64,7 @@
                     </li>
                     {% for page in pages %}
                     <li>
-                        <a href="#">{{ page.slug }}</a>
+                        <a href="{{ url_for('main.page_detail', slug=page.slug) }}">{{ page.slug }}</a>
                     </li>
                     {% endfor %}
 

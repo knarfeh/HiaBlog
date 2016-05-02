@@ -29,11 +29,12 @@ class DevConfig(Config):
 HiaBlogSettings = {
     'allow_registration': False,
     'blog_meta': {
-        'name': 'Hia Blog',
-        'subtitle': u'但行好事,莫问前程',
-        'description': 'Oct Blog Description',
-        'owner': 'knarfeh',
-        'keywords': ['Python', 'Flask', 'Docker', 'MongoDB']
+        'name': os.environ.get('name') or 'Hia Blog',
+        'subtitle': os.environ.get('subtitle') or 'Hia Blog Subtitle',
+        'description': os.environ.get('description') or 'Hia Blog Description',
+        'owner': os.environ.get('owner') or 'Knarfeh',
+        'keywords': [keyword.strip() for keyword in os.environ.get('keywords').split(',')]
+        if os.environ.get('keywords') else ['python', 'Flask', 'Docker', 'MongoDB']
     }
 
 }
