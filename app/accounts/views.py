@@ -48,9 +48,13 @@ def logout():
     return redirect(url_for('accounts.login'))
 
 
-def register():
+def register(create_su=False):
     if not HiaBlogSettings['allow_registration']:
         msg = 'Register is forbidden, please contact administrator'
+        return msg
+
+    if create_su and not HiaBlogSettings['allow_su_creation']:
+        msg = 'Register superuser is forbidden, please contact administrator'
         return msg
 
     form = forms.RegistrationForm()
@@ -59,6 +63,9 @@ def register():
         user.username = form.username.data
         user.password = form.password.data
         user.email = form.email.data
+        if create_su and HiaBlogSettings['allow_su_creation']:
+            user.is_superuser = True
+
         user.save()
 
         return redirect(url_for('main.index'))
