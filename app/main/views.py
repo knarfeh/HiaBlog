@@ -15,6 +15,8 @@ from mongoengine.queryset.visitor import Q
 from . import models
 from hia.config import HiaBlogSettings
 
+PER_PAGE = HiaBlogSettings['pagination'].get('per_page', 10)
+
 
 def get_base_data():
     pages = models.Post.objects.filter(post_type='page', is_draft=False)
@@ -30,11 +32,10 @@ def index():
 def list_posts():
     posts = models.Post.objects.filter(post_type='post', is_draft=False)
     # categories = posts.distinct('category')
-    cur_category = request.args.get('category')
     tags = posts.distinct('tags')
-
+    cur_category = request.args.get('category')
     cur_tag = request.args.get('tag')
-
+    cur_page = request.args.get('page', 1)
     keywords = request.args.get('keywords')
 
     if keywords:
@@ -47,6 +48,8 @@ def list_posts():
 
     if cur_tag:
         posts = posts.filter(tags=cur_tag)
+
+    posts = posts.paginate(page=int(cur_page), per_page=PER_PAGE)
 
     # group by aggregate
     category_cursor = models.Post._get_collection().aggregate([{

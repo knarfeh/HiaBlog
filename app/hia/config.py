@@ -33,10 +33,16 @@ HiaBlogSettings = {
         'subtitle': os.environ.get('subtitle') or 'Hia Blog Subtitle',
         'description': os.environ.get('description') or 'Hia Blog Description',
         'owner': os.environ.get('owner') or 'knarfef',
-        'keywords': os.environ.get('keywords') or 'python,django,flask,docker,MongoDB',
+        # 'keywords': os.environ.get('keywords') or 'python,django,flask,docker,MongoDB',
         'google_site_verification': '',
         'baidu_site_verification': '',
-    }
+    },
+
+    'pagination': {
+        'per_page': 2,
+        'admin_per_page': 3,
+    },
+
 
 }
 
