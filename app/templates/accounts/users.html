@@ -26,9 +26,9 @@
             <td>{{ user.last_login.strftime('%Y/%m/%d %H:%M:%S') }}</td>
             <td>{{ user.create_time.strftime('%Y/%m/%d') }}</td>
             <td>
-                <a href="#"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> </a>
-                &nbsp
                 <a href="{{ url_for('accounts.edit_user', username=user.username) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> </a>
+                &nbsp
+                <a href="{{ url_for('accounts.edit_user', username=user.username) }}"  class="del-user"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> </a>
             </td>
         </tr>
         {% else %}
@@ -54,14 +54,23 @@ $('.del-user').on('click', function (event) {
     // var answer = confirm("Delete post?");
     // return answer;
     var url = $(this).attr('href');
+    url = url + '?ajax=true';
+
     bootbox.confirm("Are you sure?", function(result) {
       if(result){
-        $.get(url, function(){
-            location.reload();
+        // $.get(url, function(){
+        //     location.reload();
+        // });
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            success: function(result){
+                location.reload();
+            }
+
         });
         }
     });
     return false;
-  });
 </script>
 {% endblock %}
