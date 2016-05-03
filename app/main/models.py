@@ -5,7 +5,7 @@ import datetime
 import markdown2
 from flask import url_for
 
-# from mongoengine import *
+
 from accounts.models import User
 from hia import db
 
@@ -44,7 +44,6 @@ class Post(db.Document):
         self.pub_time = pub_time
         self.update_time = update_time
         return self.save(allow_set_time=True)
-
 
     def __unicode__(self):
         return self.title

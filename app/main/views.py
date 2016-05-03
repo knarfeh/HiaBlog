@@ -16,6 +16,7 @@ from . import models
 from hia.config import HiaBlogSettings
 
 PER_PAGE = HiaBlogSettings['pagination'].get('per_page', 10)
+ARCHIVE_PER_PAGE = HiaBlogSettings['pagination'].get('archive_per_page', 10)
 
 
 def get_base_data():
@@ -132,6 +133,27 @@ def duoshuo_comment(duoshuo_shortname, post_id, post_title, post_url):
 #     """
 #     template_name = 'main/misc/jiathis_share.html'
 #     return render_template(template_name)
+
+def archive():
+    posts = models.Post.objects.filter(post_type='post', is_draft=False).order_by('-pub_time')
+
+    cur_category = request.args.get('category')
+    cur_tag = request.args.get('tag')
+    cur_page = request.args.get('page', 1)
+
+    if cur_category:
+        posts = posts.filter(category=cur_category)
+
+    if cur_tag:
+        posts = posts.filter(tags=cur_tag)
+
+    posts = posts.paginate(page=int(cur_page), per_page=ARCHIVE_PER_PAGE)
+
+    data = get_base_data()
+    data['posts'] = posts
+
+    return render_template('main/archive.html', **data)
+
 
 
 def make_external(url):
