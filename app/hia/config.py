@@ -32,11 +32,13 @@ HiaBlogSettings = {
     'auto_role': os.environ.get('auto_role', 'reader').lower(),
 
     'blog_meta': {
-        'name': os.environ.get('name') or 'Hia Blog',
-        'subtitle': os.environ.get('subtitle') or '',
-        'description': os.environ.get('description') or u'黑客态度 侠义精神',
-        'owner': os.environ.get('owner') or 'knarfef',
-        # 'keywords': os.environ.get('keywords') or 'python,django,flask,docker,MongoDB',
+        'name': os.environ.get('name').decode('utf8') if os.environ.get('name') else 'Hia Blog',
+        'subtitle': os.environ.get('subtitle').decode('utf8') if os.environ.get('subtitle') else '',
+        'description': os.environ.get('description').decode('utf8') if os.environ.get('description') else u'黑客态度 侠义精神',
+        'owner': os.environ.get('owner').decode('utf8') if os.environ.get('owner') else 'Gevin',
+        'keywords': os.environ.get('keywords').decode('utf8') if os.environ.get('keywords')
+        else 'python,django,flask,docker,MongoDB',
+
         'google_site_verification': os.environ.get('google_site_verification') or '12345678',
         'baidu_site_verification': os.environ.get('baidu_site_verification') or '87654321',
 
