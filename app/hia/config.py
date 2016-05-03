@@ -12,6 +12,7 @@ HiaBlogSettings = {
     'allow_registration': os.environ.get('allow_registration', 'false').lower() == 'true',
     'allow_su_creation': os.environ.get('allow_su_creation', 'false').lower() == 'true',
     'allow_donate': os.environ.get('allow_donate', 'true').lower() == 'true',
+    'allow_comment': 'true',
     'auto_role': os.environ.get('auto_role', 'reader').lower(),
 
     'blog_meta': {
