@@ -29,6 +29,7 @@ class DevConfig(Config):
 HiaBlogSettings = {
     'allow_registration': os.environ.get('allow_registration', 'false').lower() == 'true',
     'allow_su_creation': os.environ.get('allow_su_creation', 'false').lower() == 'true',
+    'allow_donate': os.environ.get('allow_donate', 'true').lower() == 'false',
     'auto_role': os.environ.get('auto_role', 'reader').lower(),
 
     'blog_meta': {
@@ -43,14 +44,17 @@ HiaBlogSettings = {
         'baidu_site_verification': os.environ.get('baidu_site_verification') or '87654321',
 
     },
-
     'pagination': {
         'per_page': int(os.environ.get('per_page', 5)),
         'admin_per_page': int(os.environ.get('admin_per_page', 10)),
-
     },
-
-
+    'blog_comment': {
+        'allow_comment': os.environ.get('allow_comment', 'true').lower() == 'true',
+        'comment_type': os.environ.get('comment_type', 'duoshuo').lower(),
+        'comment_opt': {
+            'duoshuo': 'knarfeh',     # shotname of duoshuo
+        }
+    }
 }
 
 
