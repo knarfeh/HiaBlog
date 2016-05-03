@@ -37,3 +37,5 @@ def on_identity_loaded(sender, identity):
 
     identity.allow_edit = editor_permission.allows(identity)
     identity.allow_admin = admin_permission.allows(identity)
+    identity.allow_write = writer_permission.allows(identity)
+
