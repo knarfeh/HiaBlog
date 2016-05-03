@@ -10,7 +10,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 HiaBlogSettings = {
     'allow_registration': os.environ.get('allow_registration', 'false').lower() == 'true',
     'allow_su_creation': os.environ.get('allow_su_creation', 'false').lower() == 'true',
-    'allow_donate': os.environ.get('allow_donate', 'true').lower() == 'false',
+    'allow_donate': os.environ.get('allow_donate', 'true').lower() == 'true',
     'auto_role': os.environ.get('auto_role', 'reader').lower(),
 
     'blog_meta': {
@@ -36,7 +36,7 @@ HiaBlogSettings = {
             'duoshuo': 'knarfeh',     # shotname of duoshuo
         }
     },
-    'allow_share_article': os.environ.get('allow_share_article', 'true').lower() == 'false',
+    'allow_share_article': os.environ.get('allow_share_article', 'true').lower() == 'true',
 
 }
 
@@ -63,7 +63,7 @@ class PrdConfig(Config):
     # DEBUG = False
     DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
     MONGODB_SETTINGS = {
-            'db': 'OctBlog',
+            'db': 'HiaBlog',
             'host': os.environ.get('MONGO_HOST') or 'localhost',
             # 'port': 12345
     }
