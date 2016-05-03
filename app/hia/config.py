@@ -7,25 +7,6 @@ import sys
 
 BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
-
-class Config(object):
-    BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'fjdljLJDL08_80jflKzcznv*c'
-    MONGODB_SETTINGS = {'DB': 'hia'}
-
-    TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates').replace('\\', '/')
-    STATIC_PATH = os.path.join(BASE_DIR, 'static').replace('\\', '/')
-
-    @staticmethod
-    def init_app(app):
-        pass
-
-
-class DevConfig(Config):
-    DEBUG = True
-
-
 HiaBlogSettings = {
     'allow_registration': os.environ.get('allow_registration', 'false').lower() == 'true',
     'allow_su_creation': os.environ.get('allow_su_creation', 'false').lower() == 'true',
@@ -54,8 +35,28 @@ HiaBlogSettings = {
         'comment_opt': {
             'duoshuo': 'knarfeh',     # shotname of duoshuo
         }
-    }
+    },
+    'allow_share_article': os.environ.get('allow_share_article', 'true').lower() == 'false',
+
 }
+
+
+class Config(object):
+    BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'fjdljLJDL08_80jflKzcznv*c'
+    MONGODB_SETTINGS = {'DB': 'hia'}
+
+    TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates').replace('\\', '/')
+    STATIC_PATH = os.path.join(BASE_DIR, 'static').replace('\\', '/')
+
+    @staticmethod
+    def init_app(app):
+        pass
+
+
+class DevConfig(Config):
+    DEBUG = True
 
 
 class PrdConfig(Config):

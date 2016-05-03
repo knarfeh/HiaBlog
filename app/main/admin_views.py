@@ -26,7 +26,9 @@ class AdminIndex(MethodView):
 
     def get(self):
         blog_meta = HiaBlogSettings['blog_meta']
-        return render_template(self.template_name, blog_meta=blog_meta)
+        user = get_current_user()
+        return render_template(self.template_name, blog_meta=blog_meta, user=user)
+
 
 
 class PostsList(MethodView):
@@ -66,7 +68,6 @@ class Post(MethodView):
             post = models.Post.objects.get_or_404(slug=slug)
             if not g.identity.can(editor_permission) and post.author.username != current_user.username:
                 abort(401)
-
 
         display_slug = slug if slug else 'slug-value'
 
