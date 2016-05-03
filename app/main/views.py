@@ -32,7 +32,6 @@ def index():
 
 
 def list_posts():
-    posts = models.Post.objects.filter(post_type='post', is_draft=False)
     posts = models.Post.objects.filter(post_type='post', is_draft=False).order_by('-pub_time')
     # categories = posts.distinct('category')
     tags = posts.distinct('tags')
@@ -86,7 +85,9 @@ def post_detail(slug, post_type='post', fix=False):
 
     data = get_base_data()
     data['post'] = post
-    data['allow_donate'] = HiaBlogSettings['allow_donate']
+    data['allow_donate'] = HiaBlogSettings['donation']['allow_donate']
+    data['donation_msg'] = HiaBlogSettings['donation']['donation_msg']
+
     data['allow_comment'] = HiaBlogSettings['blog_comment']['allow_comment']
     if data['allow_comment']:
         comment_type = HiaBlogSettings['blog_comment']['comment_type']
