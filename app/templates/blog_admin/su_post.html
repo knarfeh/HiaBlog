@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block css %}
+<link href="//cdn.bootcss.com/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block main %}
@@ -30,6 +31,36 @@
     {% import "_form.html" as forms %}
     <form method="POST" action="">
         {{ forms.render(form) }}
+        <div class="form-group">
+            <label for="post_type">Post Type</label>
+            <!-- <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email"> -->
+            <select class="form-control" id="post_type" name="post_type">
+                {% for post_type in post_types %}
+                <option value="{{ post_type }}" {% if post_type==post.post_type %}selected{% endif %} >{{ post_type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="publish_time">Publish Time</label>
+            <div class='input-group date' id='publish_time'>
+                <input type='text' class="form-control" name="publish_time" value="{{ post.pub_time.strftime('%Y-%m-%d %H:%M:%S') }}" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="update_time">Update Time</label>
+            <div class='input-group date' id='update_time'>
+                <input type='text' class="form-control" name="update_time" value="{{ post.update_time.strftime('%Y-%m-%d %H:%M:%S') }}" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-primary" name="user" value="user">Submit</button>
     </form>
 </div>
@@ -37,6 +68,11 @@
 {% endblock %}
 
 {% block js %}
+
+<script src="//cdn.bootcss.com/moment.js/2.10.6/moment.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+
+
 <script type="text/javascript">
     // using jQuery
     
@@ -55,6 +91,11 @@
         // $(this).remove();
         return false
     });
+
+    $(function () {
+        $('.date').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+    });
+
 
     $('.category-name').on('click', function(event){
         var category = $(this).data('category');

@@ -1,6 +1,9 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+import time
+import datetime
+
 from flask import request, redirect, render_template, url_for, abort, flash, g
 from flask.views import MethodView
 from flask_login import current_user, login_required
@@ -11,7 +14,8 @@ from accounts.permissions import admin_permission, editor_permission, writer_per
 from hia.config import HiaBlogSettings
 from accounts.models import User
 
-POST_TYPES = ('post', 'page')
+POST_TYPES = HiaBlogSettings['post_types']
+
 PER_PAGE = HiaBlogSettings['pagination'].get('admin_per_page', 10)
 
 
@@ -28,7 +32,6 @@ class AdminIndex(MethodView):
         blog_meta = HiaBlogSettings['blog_meta']
         user = get_current_user()
         return render_template(self.template_name, blog_meta=blog_meta, user=user)
-
 
 
 class PostsList(MethodView):
@@ -108,7 +111,6 @@ class Post(MethodView):
 
         post.title = form.title.data.strip()
         post.slug = form.slug.data.strip()
-        post.fix_slug = form.fix_slug.data.strip()
         post.raw = form.raw.data.strip()
         abstract = form.abstract.data.strip()
         post.abstract = abstract if abstract else post.raw[:140]
@@ -154,15 +156,25 @@ class SuPostsList(MethodView):
     decorators = [login_required, admin_permission.require(401)]
     template_name = 'blog_admin/su_posts.html'
 
-    def get(self, post_type='post'):
+    def get(self):
         # posts = models.Post.objects.filter(post_type=post_type)
         posts = models.Post.objects.all()
-        # if request.args.get('draft'):
-        #     posts = posts.filter(is_draft=True)
-        # else:
-        #     posts = posts.filter(is_draft=False)
+        cur_type = request.args.get('type')
+        # post_types = posts.distinct('post_type')
+        if cur_type:
+            posts = posts.filter(post_type=cur_type)
 
-        return render_template(self.template_name, posts=posts)
+        cur_page = request.args.get('page', 1)
+        if not cur_page:
+            abort(404)
+        posts = posts.paginate(page=int(cur_page), per_page=PER_PAGE)
+
+        data = {
+            'posts': posts,
+            'post_types': POST_TYPES,
+            'cur_type': cur_type
+        }
+        return render_template(self.template_name, **data)
 
 
 class SuPost(MethodView):
@@ -183,6 +195,7 @@ class SuPost(MethodView):
         context = {
             'form': form,
             'display_slug': slug,
+            'post': post,
             'categories': categories,
             'tags': tags,
             'post_types': POST_TYPES
@@ -211,16 +224,25 @@ class SuPost(MethodView):
 
         post.title = form.title.data.strip()
         post.slug = form.slug.data.strip()
+        post.fix_slug = form.fix_slug.data.strip()
         post.raw = form.raw.data.strip()
         abstract = form.abstract.data.strip()
         post.abstract = abstract if abstract else post.raw[:140]
         post.is_draft = form.is_draft.data
         post.author = form.author.data
 
-        post.post_type = form.post_type.data.strip() if form.post_type.data else None
+        # post.post_type = form.post_type.data.strip() if form.post_type.data else None
+        post.post_type = request.form.get('post_type') or post.post_type
+        pub_time = request.form.get('publish_time')
+        update_time = request.form.get('update_time')
+
+        if pub_time:
+            post.pub_time = datetime.datetime.strptime(pub_time, "%Y-%m-%d %H:%M:%S")
+
+        if update_time:
+            post.update_time = datetime.datetime.strptime(update_time, "%Y-%m-%d %H:%M:%S")
 
         redirect_url = url_for('blog_admin.su_posts')
-
-        post.save()
+        post.save(allow_set_time=True)
         flash('Succeed to update post', 'success')
         return redirect(redirect_url)
