@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
 
 
 BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -16,12 +15,12 @@ HiaBlogSettings = {
     'auto_role': os.environ.get('auto_role', 'reader').lower(),
 
     'blog_meta': {
-        'name': os.environ.get('name').decode('utf8') if os.environ.get('name') else 'Hia Blog',
+        'name': os.environ.get('name').decode('utf8') if os.environ.get('name') else "Frank's Blog",
         'subtitle': os.environ.get('subtitle').decode('utf8') if os.environ.get('subtitle') else '',
-        'description': os.environ.get('description').decode('utf8') if os.environ.get('description') else u'黑客态度 侠义精神',
-        'owner': os.environ.get('owner').decode('utf8') if os.environ.get('owner') else 'Gevin',
+        'description': os.environ.get('description').decode('utf8') if os.environ.get('description') else u'It’s better to burn out than to fade away',
+        'owner': os.environ.get('owner').decode('utf8') if os.environ.get('owner') else 'Frank',
         'keywords': os.environ.get('keywords').decode('utf8') if os.environ.get('keywords')
-        else 'python,django,flask,docker,MongoDB',
+        else 'Python, Flask, MongoDB',
 
         'google_site_verification': os.environ.get('google_site_verification') or '12345678',
         'baidu_site_verification': os.environ.get('baidu_site_verification') or '87654321',
