@@ -6,8 +6,8 @@ import markdown2
 from flask import url_for
 
 
-from accounts.models import User
-from hia import db
+from app.accounts.models import User
+from app.hia import db
 
 
 class Post(db.Document):

@@ -3,11 +3,10 @@
 
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
-
 from flask_script import Manager, Server
+from app.hia import create_app, db
 
-from hia import create_app, db
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 app = create_app(os.getenv('config') or 'default')
 manager = Manager(app)
@@ -21,4 +20,8 @@ manager.add_command("runserver", Server(
 ))
 
 if __name__ == "__main__":
+    if os.getenv('config'):
+        print "config"
+    else:
+        print "noconfig"
     manager.run()

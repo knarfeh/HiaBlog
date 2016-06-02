@@ -9,10 +9,10 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from . import models, forms
-from accounts.models import User
-from accounts.permissions import admin_permission, editor_permission, writer_permission, reader_permission
-from hia.config import HiaBlogSettings
-from accounts.models import User
+from app.accounts.models import User
+from app.accounts.permissions import admin_permission, editor_permission, writer_permission, reader_permission
+from app.hia.config import HiaBlogSettings
+from app.accounts.models import User
 
 POST_TYPES = HiaBlogSettings['post_types']
 

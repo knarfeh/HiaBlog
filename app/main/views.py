@@ -13,8 +13,8 @@ from mongoengine.queryset.visitor import Q
 
 
 from . import models
-from accounts.models import User
-from hia.config import HiaBlogSettings
+from app.accounts.models import User
+from app.hia.config import HiaBlogSettings
 
 PER_PAGE = HiaBlogSettings['pagination'].get('per_page', 10)
 ARCHIVE_PER_PAGE = HiaBlogSettings['pagination'].get('archive_per_page', 10)

@@ -10,7 +10,7 @@ from flask_principal import Identity, AnonymousIdentity, identity_changed
 
 from . import models, forms
 from permissions import admin_permission, su_permission
-from hia.config import HiaBlogSettings
+from app.hia.config import HiaBlogSettings
 
 
 def login():

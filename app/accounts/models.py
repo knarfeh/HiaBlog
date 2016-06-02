@@ -5,7 +5,7 @@
 import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from hia import db, login_manager
+from app.hia import db, login_manager
 
 # ROLES = ('admin', 'editor', 'writer', 'reader')
 ROLES = (
