@@ -40,7 +40,7 @@ HiaBlogSettings = {
     },
     'donation': {
         'allow_donate': os.environ.get('allow_donate', 'true').lower() == 'true',
-        'donation_msg': os.environ.get('donation_msg', 'You can donate to me if the article makes sense to you')
+        'donation_msg': os.environ.get('donation_msg', u'如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！')
     },
 
     'allow_share_article': os.environ.get('allow_share_article', 'true').lower() == 'true',
