@@ -67,10 +67,12 @@
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="{{ url_for('blog_admin.posts') }}">All Posts</a></li>
                   <li><a href="{{ url_for('blog_admin.new_post') }}">New Post</a></li>
-                  <li><a href="{{ url_for('blog_admin.posts') }}">Drafts</a></li>
+                    <li><a href="{{ url_for('blog_admin.page_drafts') }}">Drafts</a></li>
                   <li><a href="{{ url_for('blog_admin.post_statistics') }}">Posts Statistics</a></li>
+
                   <li class="divider"></li>
                   <li><a href="#">Tags</a></li>
+
                   <li class="divider"></li>
                   <li><a href="#">Category</a></li>
                 </ul>
@@ -84,7 +86,7 @@
               <ul class="dropdown-menu" role="menu">
                   <li><a href="{{ url_for('blog_admin.pages') }}">All Pages</a></li>
                   <li><a href="{{ url_for('blog_admin.new_page') }}">New Page</a></li>
-                  <li><a href="{{ url_for('blog_admin.pages') }}?draft=true">Drafts</a></li>
+                  <li><a href="{{ url_for('blog_admin.page_drafts') }}">Drafts</a></li>
               </ul>
             </li>
             {% endif %}

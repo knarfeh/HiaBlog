@@ -5,6 +5,11 @@
     <div class="row">
         <h3>403 Error</h3>
         <p>Your requests is forbidden</p>
+        {% if msg %}
+            <p>{{ msg }}</p>
+        {% else %}
+            <p>Your requests is forbidden</p>
+        {% endif %}
     </div>
 
 </div>

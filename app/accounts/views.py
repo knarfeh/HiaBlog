@@ -3,7 +3,7 @@
 
 import datetime
 
-from flask import render_template, redirect, request, flash, url_for, current_app, session
+from flask import render_template, redirect, request, flash, url_for, current_app, session, abort
 from flask.views import MethodView
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_principal import Identity, AnonymousIdentity, identity_changed
@@ -51,11 +51,11 @@ def logout():
 def register(create_su=False):
     if not HiaBlogSettings['allow_registration']:
         msg = 'Register is forbidden, please contact administrator'
-        return msg
+        abort(403, msg)
 
     if create_su and not HiaBlogSettings['allow_su_creation']:
         msg = 'Register superuser is forbidden, please contact administrator'
-        return msg
+        abort(403, msg)
 
     form = forms.RegistrationForm()
     if form.validate_on_submit():

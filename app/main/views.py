@@ -3,7 +3,7 @@
 
 from urlparse import urljoin
 from datetime import datetime, timedelta
-from flask import request, redirect, render_template, url_for, abort, flash
+from flask import request, redirect, render_template, url_for, abort, flash, g
 from flask import current_app, make_response
 from flask.views import MethodView
 from flask_login import login_required, current_user
@@ -14,6 +14,7 @@ from mongoengine.queryset.visitor import Q
 
 from . import models, signals
 from app.accounts.models import User
+from app.accounts.permissions import admin_permission, editor_permission, writer_permission, reader_permission
 from app.hia.config import HiaBlogSettings
 
 PER_PAGE = HiaBlogSettings['pagination'].get('per_page', 10)
@@ -78,8 +79,14 @@ def list_posts():
     return render_template('main/index.html', **data)
 
 
-def post_detail(slug, post_type='post', fix=False):
-    post = models.Post.objects.get_or_404(slug=slug, post_type=post_type) if not fix else models.Post.objects.get_or_404(fix_slug=slug, post_type=post_type)
+def post_detail(slug, post_type='post', fix=False, is_preview=False):
+    if is_preview:
+        if not g.identity.can(reader_permission):
+            abort(401)
+        post = models.Draft.objects.get_or_404(slug=slug, post_type=post_type)
+    else:
+        post = models.Post.objects.get_or_404(slug=slug, post_type=post_type) if not fix else models.Post.objects.get_or_404(fix_slug=slug, post_type=post_type)
+
     if post.is_draft and current_user.is_anonymous:
         abort(404)
 
@@ -97,8 +104,20 @@ def post_detail(slug, post_type='post', fix=False):
 
     data['allow_share_article'] = HiaBlogSettings['allow_share_article']
 
-    signals.post_visited.send(current_app._get_current_object(), post=post)
+    if not is_preview:
+        signals.post_visited.send(current_app._get_current_object(), post=post)
+
     return render_template('main/post.html', **data)
+
+
+def post_preview(slug, post_type='post'):
+    return post_detail(slug=slug, post_type=post_type, is_preview=True)
+
+
+def post_detail_general(slug, post_type):
+    is_preview = request.args.get('is_preview')
+    is_preview = True if is_preview.lower()=='true' else False
+    return post_detail(slug=slug, post_type=post_type, is_preview=is_preview)
 
 
 def author_detail(username):

@@ -22,7 +22,7 @@ def handle_bad_request(e):
 
 
 def handle_forbidden(e):
-    return render_template('blog_admin/403.html'), 403
+    return render_template('blog_admin/403.html', msg=e.description), 403
 
 
 def handle_unauthorized(e):

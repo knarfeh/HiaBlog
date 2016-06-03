@@ -3,6 +3,7 @@
 
 from flask import Blueprint
 from . import views
+from app.main import errors
 
 accounts = Blueprint('accounts', __name__)
 
@@ -18,6 +19,7 @@ accounts.add_url_rule('/su-users/edit/<username>', view_func=views.SuUser.as_vie
 
 accounts.add_url_rule('/user/settings/', view_func=views.Profile.as_view('settings'))
 accounts.add_url_rule('/user/password/', view_func=views.Password.as_view('password'))
+accounts.errorhandler(403)(errors.handle_forbidden)
 
 
 

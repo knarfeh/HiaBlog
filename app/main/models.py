@@ -55,11 +55,46 @@ class Post(db.Document):
     }
 
 
+class Draft(db.Document):
+    title = db.StringField(max_length=255, default='new blog', required=True)
+    slug = db.StringField(max_length=255, required=True, unique=True)
+    # fix_slug = db.StringField(max_length=255, required=False)
+    abstract = db.StringField()
+    raw = db.StringField(required=True)
+    pub_time = db.DateTimeField(default=datetime.datetime.now())
+    update_time = db.DateTimeField(default=datetime.datetime.now())
+    content_html = db.StringField(required=True)
+    author = db.ReferenceField(User)
+    category = db.StringField(max_length=64, default='default')
+    tags = db.ListField(db.StringField(max_length=30))
+    is_draft = db.BooleanField(default=True)
+    post_type = db.StringField(max_length=64, default='post')
+
+    def save(self, *args, **kwargs):
+        self.update_time = datetime.datetime.now()
+        self.content_html = markdown2.markdown(self.raw, extras=['code-friendly', 'fenced-code-blocks']).encode('utf-8')
+        return super(Draft, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return self.title
+
+    meta = {
+        'allow_inheritance': True,
+        'indexes': ['slug'],
+        'ordering': ['-update_time']
+    }
+
+
 class Tracker(db.Document):
     post = db.ReferenceField(Post)
     ip = db.StringField()
     user_agent = db.StringField()
-    create_time = db.DateTimeField(default=datetime.datetime.now())
+    create_time = db.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.create_time:
+            self.create_time = datetime.datetime.now()
+        return super(Tracker, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.ip

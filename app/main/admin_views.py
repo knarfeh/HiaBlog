@@ -5,12 +5,11 @@ import time
 import datetime
 import random
 
-from flask import request, redirect, render_template, url_for, abort, flash, g
+from flask import request, redirect, render_template, url_for, abort, flash, g, current_app
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
-from . import models, forms
-from app.accounts.models import User
+from . import models, forms, signals
 from app.accounts.permissions import admin_permission, editor_permission, writer_permission, reader_permission
 from app.hia.config import HiaBlogSettings
 from app.accounts.models import User
@@ -18,6 +17,11 @@ from app.accounts.models import User
 POST_TYPES = HiaBlogSettings['post_types']
 
 PER_PAGE = HiaBlogSettings['pagination'].get('admin_per_page', 10)
+
+article_models = {
+    'post': models.Post,
+    'draft': models.Draft
+}
 
 
 def get_current_user():
@@ -38,25 +42,29 @@ class AdminIndex(MethodView):
 class PostsList(MethodView):
     decorators = [login_required]
     template_name = 'blog_admin/posts.html'
+    is_draft = False
+    article_model = models.Post
 
     def get(self, post_type='post'):
-        posts = models.Post.objects.filter(post_type=post_type).order_by('-update_time')
+
+        posts = self.article_model.objects.filter(post_type=post_type)
 
         if not g.identity.can(editor_permission):
             posts = posts.filter(author=get_current_user())
 
-        if request.args.get('draft'):
-            posts = posts.filter(is_draft=True)
-        else:
-            posts = posts.filter(is_draft=False)
+        try:
+            cur_page = int(request.args.get('page', 1))
+        except:
+            cur_page = 1
 
-        cur_page = request.args.get('page', 1)
-        if not cur_page:
-            abort(404)
+        posts = posts.paginate(page=cur_page, per_page=PER_PAGE)
 
-        posts = posts.paginate(page=int(cur_page), per_page=PER_PAGE)
+        return render_template(self.template_name, posts=posts, post_type=post_type, is_draft=self.is_draft)
 
-        return render_template(self.template_name, posts=posts, post_type=post_type)
+
+class DraftList(PostsList):
+    is_draft = True
+    article_model = models.Draft
 
 
 class PostStatisticList(MethodView):
@@ -64,7 +72,7 @@ class PostStatisticList(MethodView):
     template_name = 'blog_admin/post_statistics.html'
 
     def get(self):
-        posts = models.PostStatistics.objects.all()
+        posts = models.PostStatistics.objects.all().order_by('-update_time')
 
         cur_page = request.args.get('page', 1)
         if not cur_page:
@@ -78,13 +86,16 @@ class Post(MethodView):
     decorators = [login_required, writer_permission.require(401)]
     template_name = 'blog_admin/post.html'
 
-    def get_context(self, slug=None, form=None, post_type='post'):
+    def get(self, slug=None, form=None, post_type='post', is_draft=False):
         edit_flag = slug is not None or False
-
         post = None
 
         if edit_flag:
-            post = models.Post.objects.get_or_404(slug=slug)
+            try:
+                post = models.Draft.objects.get(slug=slug)
+            except models.Draft.DoesNotExist:
+                post = models.Post.objects.get_or_404(slug=slug)
+
             if not g.identity.can(editor_permission) and post.author.username != current_user.username:
                 abort(401)
 
@@ -101,28 +112,25 @@ class Post(MethodView):
 
         categories = models.Post.objects.distinct('category')
         tags = models.Post.objects.distinct('tags')
-        context = {
-            'edit_flag': edit_flag,
-            'form': form,
-            'display_slug': display_slug,
-            'categories': categories,
-            'tags': tags
-        }
-        return context
 
-    def get(self, slug=None, form=None, post_type='post'):
-        context = self.get_context(slug, form, post_type)
+        context = {'edit_flag':edit_flag, 'form':form, 'display_slug':display_slug,
+            'categories':categories, 'tags':tags
+        }
+
+        # return context
         return render_template(self.template_name, **context)
 
-    def post(self, slug=None, post_type='post'):
+    def post(self, slug=None, post_type='post', is_draft=False):
+        article_model = article_models['post'] if request.form.get('publish') else article_models['draft']
+
         form = forms.PostForm(obj=request.form)
         if not form.validate():
             return self.get(slug, form)
 
-        if slug:
-            post = models.Post.objects.get_or_404(slug=slug)
-        else:
-            post = models.Post()
+        try:
+            post = article_model.objects.get_or_404(slug=slug)
+        except:
+            post = article_model()
             post.author = get_current_user()
 
         post.title = form.title.data.strip()
@@ -138,35 +146,51 @@ class Post(MethodView):
             post.is_draft = False
             msg = 'Succeed to publish the {0}'.format(post_type)
 
+            redirect_url = url_for('blog_admin.pages') if form.post_type.data == 'page' else url_for('blog_admin.posts')
+            post.save()
+
+            signals.post_pubished.send(current_app._get_current_object(), post=post)
+
+            try:
+                draft = models.Draft.objects.get(slug=slug)
+                draft.delete()
+            except:
+                pass
+            try:
+                post_statistic = models.PostStatistics.objects.get(post=post)
+            except models.PostStatistics.DoesNotExist:
+                post_statistic = models.PostStatistics()
+                post_statistic.post = post
+                post_statistic.verbose_count_base = random.randint(500, 5000)
+                post_statistic.save()
+
         elif request.form.get('draft'):
             post.is_draft = True
             msg = 'Succeed to save the draft'
+            redirect_url = url_for('blog_admin.page_drafts') if form.post_type.data == 'page' else url_for('blog_admin.drafts')
+            post.save()
         else:
-            return self.get(slug, form)
-
-        post.save()
-
-        try:
-            post_statistic = models.PostStatistics.objects.get(post=post)
-        except models.PostStatistics.DoesNotExist:
-            post_statistic = models.PostStatistics()
-            post_statistic.post = post
-            post_statistic.verbose_count_base = random.randint(500, 5000)
-            post_statistic.save()
+            return self.get(slug, form, is_draft)
 
         flash(msg, 'success')
-        redirect_url = url_for('blog_admin.pages') if form.post_type.data == 'page' else url_for('blog_admin.posts')
         return redirect(redirect_url)
 
     def delete(self, slug):
-        post = models.Post.objects.get_or_404(slug=slug)
-        post_type = post.post_type
-        is_draft = post.is_draft
+        if request.args.get('is_draft') and request.args.get('is_draft').lower()=='true':
+            article_model = article_models['draft']
+        else:
+            article_model = article_models['post']
+        post = article_model.objects.get_or_404(slug=slug)
+
+        try:
+            post_statistic = models.PostStatistics.objects.get(post=post)
+            post_statistic.delete()
+        except:
+            pass
+            
         post.delete()
 
         redirect_url = url_for('blog_admin.pages') if post_type == 'page' else url_for('blog_admin.posts')
-        if is_draft:
-            redirect_url += '?draft=true'
 
         flash('Succeed to delete the {0}'.format(post_type), 'success')
 
@@ -181,7 +205,6 @@ class SuPostsList(MethodView):
     template_name = 'blog_admin/su_posts.html'
 
     def get(self):
-        # posts = models.Post.objects.filter(post_type=post_type)
         posts = models.Post.objects.all().order_by('-update_time')
         cur_type = request.args.get('type')
         # post_types = posts.distinct('post_type')

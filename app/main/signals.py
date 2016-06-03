@@ -4,17 +4,25 @@
 from flask import request, current_app
 from blinker import Namespace
 
-from . import models
+from . import models, ext
+from app.hia.config import HiaBlogSettings
 
 hiablog_signals = Namespace()
 post_visited = hiablog_signals.signal('post-visited')
+post_pubished = hiablog_signals.signal('post-published')
+
+search_engine_submit_urls = HiaBlogSettings['search_engine_submit_urls']
+
 
 
 @post_visited.connect
 def on_post_visited(sender, post, **extra):
     tracker = models.Tracker()
     tracker.post = post
-    tracker.ip = request.remote_addr
+
+    proxy_list = request.headers.getlist('X-Forwarded-For')
+    tracker.ip = request.remote_addr if not proxy_list else proxy_list[0]
+
     tracker.user_agent = request.headers.get('User-Agent')
     tracker.save()
 
@@ -30,3 +38,16 @@ def on_post_visited(sender, post, **extra):
         post_statistic.save()
 
     post_statistic.modify(inc__visit_count=1)
+
+
+@post_pubished.connect
+def on_post_pubished(sender, post, **extra):
+    post_url = request.host + post.get_absolute_url()
+    # print post_url
+    baidu_url = search_engine_submit_urls['baidu']
+    if baidu_url:
+        # print 'Ready to post to baidu'
+        res = ext.submit_url_to_baidu(baidu_url, post_url)
+        print res.status_code, res.text
+    else:
+        print 'Not ready to submit urls yet'

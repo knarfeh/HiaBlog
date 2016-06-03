@@ -1,5 +1,5 @@
 {% extends "admin_base.html" %}
-{% block title %}{{ post_type|capitalize }}s{% endblock %}
+{% block title %}{{ post_type|capitalize }}s {% if is_draft %} -- draft {% endif %}{% endblock %}
 {% block main %}
 <div class="row">
     <!-- <div class="col-md-10"> -->
@@ -23,11 +23,7 @@
             <tr id="post-{{ post.id }}">
                 <td>{{ loop.index }}</td>
                 <td>
-                    {% if post_type=='page' %}
-                    <a href="{{ url_for('main.page_detail', slug=post.slug) }}" target="_blank">{{ post.title }}</a>
-                    {% else %}
-                    <a href="{{ url_for('main.post_detail', slug=post.slug) }}" target="_blank">{{ post.title }}</a>
-                    {% endif %}
+                    <a href="{{ url_for('main.post_general_preview', slug=post.slug, post_type=post_type) }}?is_preview={{ is_draft }}" target="_blank">{{ post.title }}</a>
                 </td>
 
                 <td>{{ post.abstract }}</td>
@@ -37,7 +33,7 @@
                 <td>
                     <a href="{{ url_for('blog_admin.edit_post', slug=post.slug) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> </a>
                     &nbsp
-                    <a href="{{ url_for('blog_admin.edit_post', slug=post.slug) }}"  class="del-post"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> </a>
+                    <a href="{{ url_for('blog_admin.edit_post', slug=post.slug) }}?is_draft={{ is_draft }}"  class="del-post"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> </a>
                 </td>
             </tr>
             {% else %}
@@ -58,7 +54,7 @@ $('.del-post').on('click', function (event) {
     // var answer = confirm("Delete post?");
     // return answer;
     var url = $(this).attr('href');
-    url = url + '?ajax=true';
+    url = url + '&ajax=true';
     bootbox.confirm("Are you sure?", function(result) {
       if(result){
       $.ajax({

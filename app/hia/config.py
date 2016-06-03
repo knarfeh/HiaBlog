@@ -24,8 +24,12 @@ HiaBlogSettings = {
 
         'google_site_verification': os.environ.get('google_site_verification') or '12345678',
         'baidu_site_verification': os.environ.get('baidu_site_verification') or '87654321',
-
+        'sogou_site_verification': os.environ.get('sogou_site_verification') or '87654321',
     },
+    'search_engine_submit_urls':{
+        'baidu': os.environ.get('baidu_submit_url')
+    },
+
     'pagination': {
         'per_page': int(os.environ.get('per_page', 5)),
         'admin_per_page': int(os.environ.get('admin_per_page', 10)),
