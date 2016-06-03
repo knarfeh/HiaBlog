@@ -2,7 +2,9 @@
   <nav>
     <ul class="pagination">
       {% if not pagination.has_prev %}
+        <li class="disabled">
           <span aria-hidden="true">&laquo;</span>
+        </li>
       {% else %}
         <li>
           <a href="?page={{ pagination.prev_num }}" aria-label="Previous">
