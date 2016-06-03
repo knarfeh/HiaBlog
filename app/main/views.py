@@ -12,7 +12,7 @@ from werkzeug.contrib.atom import AtomFeed
 from mongoengine.queryset.visitor import Q
 
 
-from . import models
+from . import models, signals
 from app.accounts.models import User
 from app.hia.config import HiaBlogSettings
 
@@ -97,6 +97,7 @@ def post_detail(slug, post_type='post', fix=False):
 
     data['allow_share_article'] = HiaBlogSettings['allow_share_article']
 
+    signals.post_visited.send(current_app._get_current_object(), post=post)
     return render_template('main/post.html', **data)
 
 

@@ -3,6 +3,7 @@
 
 import time
 import datetime
+import random
 
 from flask import request, redirect, render_template, url_for, abort, flash, g
 from flask.views import MethodView
@@ -56,6 +57,21 @@ class PostsList(MethodView):
         posts = posts.paginate(page=int(cur_page), per_page=PER_PAGE)
 
         return render_template(self.template_name, posts=posts, post_type=post_type)
+
+
+class PostStatisticList(MethodView):
+    decorators = [login_required, editor_permission.require(401)]
+    template_name = 'blog_admin/post_statistics.html'
+
+    def get(self):
+        posts = models.PostStatistics.objects.all()
+
+        cur_page = request.args.get('page', 1)
+        if not cur_page:
+            abort(404)
+        posts = posts.paginate(page=int(cur_page), per_page=PER_PAGE)
+
+        return render_template(self.template_name, posts=posts)
 
 
 class Post(MethodView):
@@ -118,21 +134,29 @@ class Post(MethodView):
         post.tags = [tag.strip() for tag in form.tags_str.data.split(',')] if form.tags_str.data else None
         post.post_type = form.post_type.data if form.post_type.data else None
 
-        redirect_url = url_for('blog_admin.pages') if form.post_type.data == 'page' else url_for('blog_admin.posts')
-
         if request.form.get('publish'):
             post.is_draft = False
-            post.save()
-            flash('Succeed to publish the {0}'.format(post_type), 'success')
-            return redirect(redirect_url)
+            msg = 'Succeed to publish the {0}'.format(post_type)
 
         elif request.form.get('draft'):
             post.is_draft = True
-            post.save()
-            flash('Succeed to save the draft', 'success')
-            return redirect('{0}?draft=true'.format(redirect_url))
+            msg = 'Succeed to save the draft'
+        else:
+            return self.get(slug, form)
 
-        return self.get(slug, form)
+        post.save()
+
+        try:
+            post_statistic = models.PostStatistics.objects.get(post=post)
+        except models.PostStatistics.DoesNotExist:
+            post_statistic = models.PostStatistics()
+            post_statistic.post = post
+            post_statistic.verbose_count_base = random.randint(500, 5000)
+            post_statistic.save()
+
+        flash(msg, 'success')
+        redirect_url = url_for('blog_admin.pages') if form.post_type.data == 'page' else url_for('blog_admin.posts')
+        return redirect(redirect_url)
 
     def delete(self, slug):
         post = models.Post.objects.get_or_404(slug=slug)

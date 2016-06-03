@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+import os
+
 from flask import Flask
 from flask_mongoengine import MongoEngine
 from flask_login import LoginManager
@@ -36,3 +38,5 @@ def create_app(config_name):
     app.register_blueprint(accounts_blueprint, url_prefix='/accounts')
 
     return app
+
+app = create_app(os.getenv('config') or 'default')
