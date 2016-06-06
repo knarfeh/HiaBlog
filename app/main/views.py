@@ -3,18 +3,16 @@
 
 from urlparse import urljoin
 from datetime import datetime, timedelta
-from flask import request, redirect, render_template, url_for, abort, flash, g
+from flask import request, render_template, abort, g
 from flask import current_app, make_response
-from flask.views import MethodView
-from flask_login import login_required, current_user
+from flask_login import current_user
 
 from werkzeug.contrib.atom import AtomFeed
 from mongoengine.queryset.visitor import Q
 
-
 from . import models, signals
 from app.accounts.models import User
-from app.accounts.permissions import admin_permission, editor_permission, writer_permission, reader_permission
+from app.accounts.permissions import reader_permission
 from app.hia.config import HiaBlogSettings
 
 PER_PAGE = HiaBlogSettings['pagination'].get('per_page', 10)
@@ -42,7 +40,6 @@ def list_posts():
     keywords = request.args.get('keywords')
 
     if keywords:
-        # posts = posts.filter(raw__contains=keywords )
         posts = posts.filter(Q(raw__contains=keywords) | Q(title__contains=keywords))
 
     if cur_category:
@@ -75,7 +72,6 @@ def list_posts():
     data['cur_tag'] = cur_tag
     data['tags'] = tags
     data['keywords'] = keywords
-
     return render_template('main/index.html', **data)
 
 
@@ -139,7 +135,6 @@ def author_detail(username):
     return render_template('main/author.html', **data)
 
 
-
 def get_comment_func(comment_type):
     if comment_type == 'duoshuo':
         return duoshuo_comment
@@ -167,14 +162,6 @@ def duoshuo_comment(duoshuo_shortname, post_id, post_title, post_url):
     return render_template(template_name, **data)
 
 
-# def jiathis_share():
-#     u"""
-#     Create jiathis script by params
-#     :return:
-#     """
-#     template_name = 'main/misc/jiathis_share.html'
-#     return render_template(template_name)
-
 def archive():
     posts = models.Post.objects.filter(post_type='post', is_draft=False).order_by('-pub_time')
 
@@ -194,7 +181,6 @@ def archive():
     data['posts'] = posts
 
     return render_template('main/archive.html', **data)
-
 
 
 def make_external(url):
@@ -231,8 +217,7 @@ def sitemap():
             pages.append(
                          [rule.rule, ten_days_ago]
                          )
-
-    ## user model pages
+    # # user model pages
     # users=User.query.order_by(User.modified_time).all()
     # for user in users:
     #     url=url_for('user.pub',name=user.name)

@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-
 import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -40,9 +39,6 @@ class User(UserMixin, db.Document):
     biography = db.StringField()
     social_networks = db.DictField(default=SOCIAL_NETWORKS)
     homepage_url = db.URLField()
-
-
-
 
     @property
     def password(self):

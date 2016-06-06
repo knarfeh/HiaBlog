@@ -3,95 +3,93 @@
 {% block title %}{{ blog_meta.name }}{% endblock %}
 {% block header %}
 <header class="intro-header" style="background-image: url('http://7xi5vu.com1.z0.glb.clouddn.com/hiabackground.jpg')">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>{{ blog_meta.name }}</h1>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="site-heading">
+          <h1>{{ blog_meta.name }}</h1>
         </div>
+      </div>
     </div>
+  </div>
 </header>
 {% endblock %}
 
 {% block main %}
 <div class="container">
-    <div class="row">
-        <div class="col-lg-6 col-lg-offset-2 col-md-8 col-md-offset-1">
-            {% for post in posts.items %}
-            <div class="post-preview">
-                <a href="{{ url_for('main.post_detail', slug=post.slug) }}">
-                    <h2 class="post-title">
-                        {{ post.title }}
-                    </h2>
-                </a>
-                <p class="post-subtitle">
-                    {{ post.abstract }}
-                </p>
-                <p class="post-meta">Posted by <a href="{{ url_for('main.author_detail', username=post.author.username) }}">{{ post.author.username }}</a> on {{ post.pub_time.strftime('%Y-%m-%d') }}</p>
-            </div>
-            {% if not loop.last %}
-            <hr>
+  <div class="row">
+    <div class="col-lg-6 col-lg-offset-2 col-md-8 col-md-offset-1">
+      {% for post in posts.items %}
+      <div class="post-preview">
+        <a href="{{ url_for('main.post_detail', slug=post.slug) }}">
+          <h2 class="post-title">
+            {{ post.title }}
+          </h2>
+        </a>
+        <p class="post-subtitle">
+          {{ post.abstract }}
+        </p>
+        <p class="post-meta">Posted by <a href="{{ url_for('main.author_detail', username=post.author.username) }}">{{ post.author.username }}</a> on {{ post.pub_time.strftime('%Y-%m-%d') }}</p>
+      </div>
+        {% if not loop.last %}
+        <hr>
+        {% endif %}
+        {% else %}
+          <p class="post-subtitle">
+            No articles found here
+          </p>
+        {% endfor %}
+        <!-- Pager -->
+        <ul class="pager">
+          {% if posts.has_next %}
+            <li class="next">
+              <a href="?page={{ posts.next_num }}
+                {%- if cur_category %}&category={{ cur_category }}{% endif %}
+                {%- if cur_tag %}&tag={{ cur_tag }}{% endif %}">Older Posts &rarr;</a>
+            </li>
             {% endif %}
-            {% else %}
-                <p class="post-subtitle">
-                    No articles found here
-                </p>
-            {% endfor %}
-            <!-- Pager -->
-            <ul class="pager">
-                {% if posts.has_next %}
-                <li class="next">
-                    <a href="?page={{ posts.next_num }}
-                        {%- if cur_category %}&category={{ cur_category }}{% endif %}
-                        {%- if cur_tag %}&tag={{ cur_tag }}{% endif %}">Older Posts &rarr;</a>
-                </li>
-                {% endif %}
-                {% if posts.has_prev %}
-                    <li class="next"><a href="?page={{ posts.prev_num }}
-                        {%- if cur_category %}&category={{ cur_category }}{% endif %}
-                        {%- if cur_tag %}&tag={{ cur_tag }}{% endif %}">Previous Posts</a></li>
-                {% endif %}
-            </ul>
-        </div>
-        <div class="col-lg-3 col-md-2">
-            <h3>Tags</h3><hr/>
-            {% for tag in tags %}
-                <a href="?tag={{tag}}" class="post-tag">
-                    {% if tag == cur_tag %}
-                    <span class="label label-primary">
-                        {{ tag }}
-                        <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small>
-                    </span>
-
-                    {% else %}
-                    <span class="label label-default">
-                        {{ tag }}
-                    </span>
-                    {% endif %}
-                </a>
-                &nbsp;
-            {% endfor %}
-            
-            <h3>Category</h3><hr/>
-            <div class="list-group">
-                {% for category in category_cursor %}
-                {% if category %}
-                    {% if cur_category == category.name %}
-                        <a href="?category={{ category.name }}" class="list-group-item category-list active">{{ category.name }}
-                        <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small>
-                        <span class="badge">&nbsp;{{ category.count }}&nbsp;</span></a>
-                    {% else %}
-                        <a href="?category={{ category.name }}" class="list-group-item category-list ">{{ category.name }}
-                        <span class="badge">&nbsp;{{ category.count }}&nbsp;</span></a>
-                    {% endif %}
-                {% endif %}
-                {% endfor %}
-
-            </div>
-        </div>
+            {% if posts.has_prev %}
+              <li class="next"><a href="?page={{ posts.prev_num }}
+                {%- if cur_category %}&category={{ cur_category }}{% endif %}
+                {%- if cur_tag %}&tag={{ cur_tag }}{% endif %}">Previous Posts</a></li>
+            {% endif %}
+        </ul>
     </div>
+    <div class="col-lg-3 col-md-2">
+      <h3>Tags</h3><hr/>
+      {% for tag in tags %}
+        <a href="?tag={{ tag }}" class="post-tag">
+          {% if tag == cur_tag %}
+          <span class="label label-primary">
+            {{ tag }}
+            <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small>
+          </span>
+
+          {% else %}
+            <span class="label label-default">
+              {{ tag }}
+            </span>
+          {% endif %}
+        </a>
+      {% endfor %}
+
+      <h3>Category</h3><hr/>
+      <div class="list-group">
+        {% for category in category_cursor %}
+        {% if category %}
+          {% if cur_category == category.name %}
+            <a href="?category={{ category.name }}" class="list-group-item category-list active">{{ category.name }}
+            <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small>
+            <span class="badge">&nbsp;{{ category.count }}&nbsp;</span></a>
+          {% else %}
+            <a href="?category={{ category.name }}" class="list-group-item category-list ">{{ category.name }}
+            <span class="badge">&nbsp;{{ category.count }}&nbsp;</span></a>
+          {% endif %}
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </div>
 
 <hr>

@@ -3,11 +3,8 @@
 
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, SelectField, ValidationError
-from wtforms.validators import Required, Length, Email, Regexp, EqualTo, URL, Optional
+from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo, URL, Optional
 from flask_login import current_user
-
-from flask_mongoengine.wtf import model_form
-
 
 from . import models
 
@@ -19,12 +16,13 @@ class LoginForm(Form):
 
 
 class RegistrationForm(Form):
-    username = StringField('Username', validators=[Required(), Length(1, 64),
+    username = StringField('Username', validators=[DataRequired(), Length(1, 64),
                                                    Regexp('^[A-Za-z0-9_.]*$', 0,
-                           'Usernames must have only letters, numbers dots or underscores')])
-    email = StringField('Email', validators=[Required(), Length(1, 128), Email()])
-    password = PasswordField('Password', validators=[Required(), EqualTo('password2', message='Passwords must match')])
-    password2 = PasswordField('Confirm password', validators=[Required()])
+                           'Username must have only letters, numbers dots or underscores')])
+    email = StringField('Email', validators=[DataRequired(), Length(1, 128), Email()])
+    password = PasswordField('Password',
+                             validators=[DataRequired(), EqualTo('password2', message='Passwords must match')])
+    password2 = PasswordField('Confirm password', validators=[DataRequired()])
 
     def validate_username(self, field):
         if models.User.objects.filter(username=field.data).count() > 0:
@@ -36,16 +34,12 @@ class RegistrationForm(Form):
 
 
 class UserForm(Form):
-    email = StringField('Email', validators=[Required(), Length(1,128), Email()])
-    # is_active = BooleanField('Is activie')
-    # is_superuser = BooleanField('Is superuser')
+    email = StringField('Email', validators=[DataRequired(), Length(1, 128), Email()])
     role = SelectField('Role', choices=models.ROLES)
-
-# SuUserForm = model_form(models.User, exclude=['create_time', 'last_login', 'password_hash'])
 
 
 class SuUserForm(Form):
-    email = StringField('Email', validators=[Required(), Length(1,128), Email()])
+    email = StringField('Email', validators=[DataRequired(), Length(1, 128), Email()])
     is_superuser = BooleanField('Is superuser')
     is_email_confirmed = BooleanField('Is Email Confirmed')
     role = SelectField('Role', choices=models.ROLES)
@@ -60,13 +54,9 @@ class SuUserForm(Form):
     linkedin = StringField('Linkedin', validators=[URL(), Optional()])
 
 
-# ProfileForm = model_form(models.User, exclude=['username', 'password_hash', 'create_time', 'last_login',
-#     'is_email_confirmed', 'is_superuser', 'role'])
-
-
 class ProfileForm(Form):
-    email = StringField('Email', validators=[Required(), Length(1,128), Email()])
-    display_name = StringField('Display Name', validators=[Length(1,128)])
+    email = StringField('Email', validators=[DataRequired(), Length(1, 128), Email()])
+    display_name = StringField('Display Name', validators=[Length(1, 128)])
     biography = StringField('Biograpyh')
     homepage_url = StringField('Homepage', validators=[URL(), Optional()])
     weibo = StringField('Weibo', validators=[URL(), Optional()])
@@ -78,9 +68,10 @@ class ProfileForm(Form):
 
 
 class PasswordForm(Form):
-    current_password = PasswordField('Current Password', validators=[Required()])
-    new_password = PasswordField('New Password', validators=[Required(), EqualTo('password2', message='Passwords must match')])
-    password2 = PasswordField('Confirm password', validators=[Required()])
+    current_password = PasswordField('Current Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password',
+                                 validators=[DataRequired(), EqualTo('password2', message='Passwords must match')])
+    password2 = PasswordField('Confirm password', validators=[DataRequired()])
 
     def validate_current_password(self, field):
         if not current_user.verify_password(field.data):

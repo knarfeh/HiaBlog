@@ -17,19 +17,18 @@ HiaBlogSettings = {
     'blog_meta': {
         'name': os.environ.get('name').decode('utf8') if os.environ.get('name') else "Frank's Blog",
         'subtitle': os.environ.get('subtitle').decode('utf8') if os.environ.get('subtitle') else '',
-        'description': os.environ.get('description').decode('utf8') if os.environ.get('description') else u'It’s better to burn out than to fade away',
+        'description': os.environ.get('description').decode('utf8') if os.environ.get('description')
+        else u'It’s better to burn out than to fade away',
         'owner': os.environ.get('owner').decode('utf8') if os.environ.get('owner') else 'Frank',
         'keywords': os.environ.get('keywords').decode('utf8') if os.environ.get('keywords')
         else 'Python, Flask, MongoDB',
-
-        'google_site_verification': os.environ.get('google_site_verification') or '12345678',
-        'baidu_site_verification': os.environ.get('baidu_site_verification') or '87654321',
-        'sogou_site_verification': os.environ.get('sogou_site_verification') or '87654321',
+        'google_site_verification': os.environ.get('google_site_verification') or 'TODO',
+        'baidu_site_verification': os.environ.get('baidu_site_verification') or 'TODO',
+        'sogou_site_verification': os.environ.get('sogou_site_verification') or 'TODO',
     },
-    'search_engine_submit_urls':{
+    'search_engine_submit_urls': {
         'baidu': os.environ.get('baidu_submit_url')
     },
-
     'pagination': {
         'per_page': int(os.environ.get('per_page', 5)),
         'admin_per_page': int(os.environ.get('admin_per_page', 10)),
@@ -46,7 +45,6 @@ HiaBlogSettings = {
         'allow_donate': os.environ.get('allow_donate', 'true').lower() == 'true',
         'donation_msg': os.environ.get('donation_msg', u'如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！')
     },
-
     'allow_share_article': os.environ.get('allow_share_article', 'true').lower() == 'true',
 }
 
@@ -75,7 +73,6 @@ class PrdConfig(Config):
     MONGODB_SETTINGS = {
             'db': 'HiaBlog',
             'host': os.environ.get('MONGO_HOST') or 'localhost',
-            # 'port': 12345
     }
 
 config = {

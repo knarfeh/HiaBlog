@@ -9,10 +9,9 @@ from app.hia.config import HiaBlogSettings
 
 hiablog_signals = Namespace()
 post_visited = hiablog_signals.signal('post-visited')
-post_pubished = hiablog_signals.signal('post-published')
+post_published = hiablog_signals.signal('post-published')
 
 search_engine_submit_urls = HiaBlogSettings['search_engine_submit_urls']
-
 
 
 @post_visited.connect
@@ -40,7 +39,7 @@ def on_post_visited(sender, post, **extra):
     post_statistic.modify(inc__visit_count=1)
 
 
-@post_pubished.connect
+@post_published.connect
 def on_post_pubished(sender, post, **extra):
     post_url = request.host + post.get_absolute_url()
     # print post_url

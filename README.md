@@ -1,5 +1,14 @@
 # hia
 
-A blog system, powered by Flask and MongoDB
+一个基于 Flask + MongoDB 的博客系统
 
-let's begin.
+## 后端
+
+* Flask
+* MongoDB
+
+
+## 前端
+
+* [clean blog](https://github.com/BlackrockDigital/startbootstrap-clean-blog)
+

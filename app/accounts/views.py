@@ -66,11 +66,8 @@ def register(create_su=False):
         user.display_name = user.username
         if create_su and HiaBlogSettings['allow_su_creation']:
             user.is_superuser = True
-
         user.save()
-
         return redirect(url_for('main.index'))
-
     return render_template('accounts/registration.html', form=form)
 
 
@@ -84,9 +81,7 @@ def add_user():
         user.email = form.email.data
         user.display_name = user.username
         user.save()
-
         return redirect(url_for('accounts.users'))
-
     return render_template('accounts/registration.html', form=form)
 
 
@@ -98,6 +93,7 @@ def get_current_user():
 class Users(MethodView):
     decorators = [login_required, admin_permission.require(401)]
     template_name = 'accounts/users.html'
+
     def get(self):
         users = models.User.objects.all()
         return render_template(self.template_name, users=users)
@@ -203,7 +199,6 @@ class SuUser(MethodView):
             return redirect(url_for('accounts.su_edit_user', username=user.username))
 
         return self.get(form)
-
 
 
 class Profile(MethodView):

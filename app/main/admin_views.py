@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-import time
 import datetime
 import random
 
@@ -10,12 +9,11 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from . import models, forms, signals
-from app.accounts.permissions import admin_permission, editor_permission, writer_permission, reader_permission
+from app.accounts.permissions import admin_permission, editor_permission, writer_permission
 from app.hia.config import HiaBlogSettings
 from app.accounts.models import User
 
 POST_TYPES = HiaBlogSettings['post_types']
-
 PER_PAGE = HiaBlogSettings['pagination'].get('admin_per_page', 10)
 
 article_models = {
@@ -58,7 +56,6 @@ class PostsList(MethodView):
             cur_page = 1
 
         posts = posts.paginate(page=cur_page, per_page=PER_PAGE)
-
         return render_template(self.template_name, posts=posts, post_type=post_type, is_draft=self.is_draft)
 
 
@@ -113,8 +110,8 @@ class Post(MethodView):
         categories = models.Post.objects.distinct('category')
         tags = models.Post.objects.distinct('tags')
 
-        context = {'edit_flag':edit_flag, 'form':form, 'display_slug':display_slug,
-            'categories':categories, 'tags':tags
+        context = {'edit_flag':edit_flag, 'form': form, 'display_slug': display_slug,
+            'categories':categories, 'tags': tags
         }
 
         # return context
@@ -170,7 +167,7 @@ class Post(MethodView):
             redirect_url = url_for('blog_admin.page_drafts') if form.post_type.data == 'page' else url_for('blog_admin.drafts')
             post.save()
         else:
-            return self.get(slug, form, is_draft)
+            return self.get(slug, form, is_draft=post.is_draft)
 
         flash(msg, 'success')
         return redirect(redirect_url)
@@ -181,6 +178,7 @@ class Post(MethodView):
         else:
             article_model = article_models['post']
         post = article_model.objects.get_or_404(slug=slug)
+        post_type = post.post_type
 
         try:
             post_statistic = models.PostStatistics.objects.get(post=post)

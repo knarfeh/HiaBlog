@@ -3,9 +3,8 @@
 
 import datetime
 import markdown2
+
 from flask import url_for
-
-
 from app.accounts.models import User
 from app.hia import db
 
@@ -25,7 +24,6 @@ class Post(db.Document):
     is_draft = db.BooleanField(default=False)
     post_type = db.StringField(max_length=64, default='post')
 
-
     def get_absolute_url(self):
         return url_for('main.post_detail', slug=self.slug)
 
@@ -37,7 +35,8 @@ class Post(db.Document):
             self.update_time = now
 
         # self.content_html = self.raw
-        self.content_html = markdown2.markdown(self.raw, extras=['code-friendly', 'fenced-code-blocks', 'tables']).encode('utf-8')
+        self.content_html = markdown2.markdown(self.raw,
+                                               extras=['code-friendly', 'fenced-code-blocks', 'tables']).encode('utf-8')
         return super(Post, self).save(*args, **kwargs)
 
     def set_post_date(self, pub_time, update_time):
@@ -75,7 +74,8 @@ class Draft(db.Document):
         if not self.pub_time:
             self.pub_time = now
         self.update_time = now
-        self.content_html = markdown2.markdown(self.raw, extras=['code-friendly', 'fenced-code-blocks', 'tables']).encode('utf-8')
+        self.content_html = markdown2.markdown(self.raw,
+                                               extras=['code-friendly', 'fenced-code-blocks', 'tables']).encode('utf-8')
         return super(Draft, self).save(*args, **kwargs)
 
     def __unicode__(self):
