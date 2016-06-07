@@ -8,6 +8,7 @@ from flask import request, redirect, render_template, url_for, abort, flash, g, 
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
+
 from . import models, forms, signals
 from app.accounts.permissions import admin_permission, editor_permission, writer_permission
 from app.hia.config import HiaBlogSettings
@@ -110,8 +111,12 @@ class Post(MethodView):
         categories = models.Post.objects.distinct('category')
         tags = models.Post.objects.distinct('tags')
 
-        context = {'edit_flag':edit_flag, 'form': form, 'display_slug': display_slug,
-            'categories':categories, 'tags': tags
+        context = {
+            'edit_flag': edit_flag,
+            'form': form,
+            'display_slug': display_slug,
+            'categories': categories,
+            'tags': tags
         }
 
         # return context
@@ -173,7 +178,7 @@ class Post(MethodView):
         return redirect(redirect_url)
 
     def delete(self, slug):
-        if request.args.get('is_draft') and request.args.get('is_draft').lower()=='true':
+        if request.args.get('is_draft') and request.args.get('is_draft').lower() == 'true':
             article_model = article_models['draft']
         else:
             article_model = article_models['post']
@@ -184,6 +189,7 @@ class Post(MethodView):
             post_statistic = models.PostStatistics.objects.get(post=post)
             post_statistic.delete()
         except:
+            # No statistic for this post
             pass
             
         post.delete()

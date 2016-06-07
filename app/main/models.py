@@ -47,6 +47,9 @@ class Post(db.Document):
     def __unicode__(self):
         return self.title
 
+    def __repr__(self):
+        return '<Post %r>' % self.title
+
     meta = {
         'allow_inheritance': True,
         'indexes': ['slug'],
@@ -81,6 +84,9 @@ class Draft(db.Document):
     def __unicode__(self):
         return self.title
 
+    def __repr__(self):
+        return '<Draft %r' % self.title
+
     meta = {
         'allow_inheritance': True,
         'indexes': ['slug'],
@@ -102,6 +108,9 @@ class Tracker(db.Document):
     def __unicode__(self):
         return self.ip
 
+    def __repr__(self):
+        return '<Tracker %r>' % self.ip
+
     meta = {
         'allow_inheritance': True,
         'indexes': ['ip'],
@@ -113,3 +122,6 @@ class PostStatistics(db.Document):
     post = db.ReferenceField(Post)
     visit_count = db.IntField(default=0)
     verbose_count_base = db.IntField(default=0)
+
+    def __repr__(self):
+        return '<PostStatistics %r>' % self.post
