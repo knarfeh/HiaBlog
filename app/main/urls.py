@@ -16,6 +16,8 @@ main.add_url_rule('/posts/<slug>/preview/', 'post_preview', views.post_detail, d
 main.add_url_rule('/posts/<slug>/<post_type>/preview/', 'post_general_preview', views.post_detail_general)
 main.add_url_rule('/pages/<slug>/', 'page_detail', views.post_detail, defaults={'post_type': 'page'})
 main.add_url_rule('/archive/', 'archive', views.archive)
+main.add_url_rule('/tweet/', 'tweet', views.tweet)
+main.add_url_rule('/eebook/', 'eebook', views.eebook)
 main.add_url_rule('/users/<username>/', 'author_detail', views.author_detail)
 main.add_url_rule('/atom/', 'recent_feed', views.recent_feed)
 main.add_url_rule('/sitemap.xml/', 'sitemap', views.sitemap)

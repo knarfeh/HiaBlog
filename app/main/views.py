@@ -178,6 +178,13 @@ def archive():
     return render_template('main/archive.html', **data)
 
 
+def tweet():
+    return render_template('main/tweet.html')
+
+
+def eebook():
+    return render_template('main/eebook.html')
+
 def make_external(url):
     return urljoin(request.url_root, url)
 

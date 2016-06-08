@@ -75,16 +75,23 @@
       <div class="collapse navbar-collapse" id="hiablog_navbar">
         <ul class="nav navbar-nav navbar-right">
           <li>
+            <a href="{{ url_for('main.recent_feed') }}" target="_blank">RSS</a>
+          </li>
+          <li>
             <a href="{{ url_for('main.archive') }}">Archive</a>
           </li>
           <li>
-            <a href="{{ url_for('main.recent_feed') }}" target="_blank">RSS</a>
-          </li>
-
-          <li>
             <a href="http://knarfeh.com">knarfeh.com</a>
           </li>
-
+          <li>
+            <a href="{{ url_for('static', filename='ticktack/index.html', birthday=19940613) }}">Ticktack</a>
+          </li>
+          <li>
+            <a href="{{ url_for('main.eebook') }}">EEBook</a>
+          </li>
+          <li>
+            <a href="{{ url_for('main.tweet') }}">Tweet</a>
+          </li>
           {% for page in pages %}
           <li>
             <a href="{{ url_for('main.page_detail', slug=page.slug) }}">{{ page.slug }}</a>
