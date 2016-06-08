@@ -1,6 +1,6 @@
 # Hia
 
-一个基于 Flask + MongoDB 的博客系统， fork [OctBlog](https://github.com/flyhigher139/OctBlog)
+一个基于 Flask + MongoDB 的博客系统， fork from [OctBlog](https://github.com/flyhigher139/OctBlog)
 
 ## 后端
 
