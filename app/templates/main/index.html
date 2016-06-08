@@ -76,7 +76,7 @@
       <h3>Category</h3><hr/>
       <div class="list-group">
         {% for category in category_cursor %}
-        {% if category %}
+        {% if category and category.name %}
           {% if cur_category == category.name %}
             <a href="?category={{ category.name }}" class="list-group-item category-list active">{{ category.name }}
             <small><span class="glyphicon glyphicon-remove small rm-filter" aria-hidden="true"></span></small>

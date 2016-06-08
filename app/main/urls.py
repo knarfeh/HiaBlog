@@ -38,6 +38,8 @@ blog_admin.add_url_rule('/pages/draft/', view_func=admin_views.DraftList.as_view
 blog_admin.add_url_rule('/new-page/', view_func=admin_views.Post.as_view('new_page'), defaults={'post_type': 'page'})
 
 blog_admin.add_url_rule('/posts/statistics/', view_func=admin_views.PostStatisticList.as_view('post_statistics'))
+blog_admin.add_url_rule('/posts/statistics/<slug>/',
+                        view_func=admin_views.PostStatisticDetail.as_view('post_statistics_detail'))
 
 blog_admin.add_url_rule('/su/posts/', view_func=admin_views.SuPostsList.as_view('su_posts'))
 blog_admin.add_url_rule('/su/posts/<slug>/', view_func=admin_views.SuPost.as_view('su_post_edit'))

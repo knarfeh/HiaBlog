@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from urlparse import urljoin
-from datetime import datetime, timedelta
 from flask import request, render_template, abort, g
 from flask import current_app, make_response
 from flask_login import current_user
@@ -26,17 +25,18 @@ def get_base_data():
     return data
 
 
-def index():
-    return 'Hello'
-
-
 def list_posts():
     posts = models.Post.objects.filter(post_type='post', is_draft=False).order_by('-pub_time')
     # categories = posts.distinct('category')
     tags = posts.distinct('tags')
+
+    try:
+        cur_page = int(request.args.get('page', 1))
+    except ValueError:
+        cur_page = 1
+
     cur_category = request.args.get('category')
     cur_tag = request.args.get('tag')
-    cur_page = request.args.get('page', 1)
     keywords = request.args.get('keywords')
 
     if keywords:
@@ -47,8 +47,6 @@ def list_posts():
 
     if cur_tag:
         posts = posts.filter(tags=cur_tag)
-
-    posts = posts.paginate(page=int(cur_page), per_page=PER_PAGE)
 
     # group by aggregate
     category_cursor = models.Post._get_collection().aggregate([{
@@ -64,6 +62,7 @@ def list_posts():
             },
         }
     }])
+    posts = posts.paginate(page=cur_page, per_page=PER_PAGE)
 
     data = get_base_data()
     data['posts'] = posts
@@ -111,8 +110,8 @@ def post_preview(slug, post_type='post'):
 
 
 def post_detail_general(slug, post_type):
-    is_preview = request.args.get('is_preview')
-    is_preview = True if is_preview.lower()=='true' else False
+    is_preview = request.args.get('is_preview', 'false')
+    is_preview = True if is_preview.lower() == 'true' else False
     return post_detail(slug=slug, post_type=post_type, is_preview=is_preview)
 
 
@@ -127,10 +126,6 @@ def author_detail(username):
     data = get_base_data()
     data['user'] = author
     data['posts'] = posts
-    # data['category_cursor'] = category_cursor
-    # data['cur_tag'] = cur_tag
-    # data['tags'] = tags
-    # data['keywords'] = keywords
 
     return render_template('main/author.html', **data)
 
@@ -209,20 +204,6 @@ def sitemap():
     #########################
     # static pages
     #########################
-
-    ten_days_ago = (datetime.now() - timedelta(days=10)).date().isoformat()
-
-    for rule in current_app.url_map.iter_rules():
-        if "GET" in rule.methods and len(rule.arguments) == 0:
-            pages.append(
-                         [rule.rule, ten_days_ago]
-                         )
-    # # user model pages
-    # users=User.query.order_by(User.modified_time).all()
-    # for user in users:
-    #     url=url_for('user.pub',name=user.name)
-    #     modified_time=user.modified_time.date().isoformat()
-    #     pages.append([url,modified_time])
 
     ######################
     # Post Pages

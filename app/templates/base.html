@@ -84,6 +84,7 @@
           <li>
             <a href="http://knarfeh.com">knarfeh.com</a>
           </li>
+
           {% for page in pages %}
           <li>
             <a href="{{ url_for('main.page_detail', slug=page.slug) }}">{{ page.slug }}</a>

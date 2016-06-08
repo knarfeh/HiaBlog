@@ -72,12 +72,34 @@ class PostStatisticList(MethodView):
     def get(self):
         posts = models.PostStatistics.objects.all().order_by('-update_time')
 
-        cur_page = request.args.get('page', 1)
-        if not cur_page:
-            abort(404)
-        posts = posts.paginate(page=int(cur_page), per_page=PER_PAGE)
+        try:
+            cur_page = int(request.args.get('page', 1))
+        except:
+            cur_page = 1
+        posts = posts.paginate(page=cur_page, per_page=PER_PAGE*2)
 
         return render_template(self.template_name, posts=posts)
+
+
+class PostStatisticDetail(MethodView):
+    decorators = [login_required, editor_permission.require(401)]
+    template_name = 'blog_admin/post_statistics_detail.html'
+
+    def get(self, slug):
+        post = models.Post.objects.get_or_404(slug=slug)
+        post_statistics = models.PostStatistics.objects.get_or_404(post=post)
+        trackers = models.Tracker.objects(post=post)
+
+        try:
+            cur_page = int(request.args.get('page', 1))
+        except:
+            cur_page = 1
+
+        trackers = trackers.paginate(page=cur_page, per_page=PER_PAGE*2)
+
+        data = {'post_statistics':post_statistics, 'trackers': trackers}
+
+        return render_template(self.template_name, **data)
 
 
 class Post(MethodView):
@@ -144,11 +166,23 @@ class Post(MethodView):
         post.tags = [tag.strip() for tag in form.tags_str.data.split(',')] if form.tags_str.data else None
         post.post_type = form.post_type.data if form.post_type.data else None
 
+        post_urls = {
+            'post': url_for('blog_admin.posts'),
+            'page': url_for('blog_admin.pages'),
+            'wechat': url_for('blog_admin.wechats'),
+        }
+
+        draft_urls = {
+            'post': url_for('blog_admin.drafts'),
+            'page': url_for('blog_admin.page_drafts'),
+            'wechat': url_for('blog_admin.wechat_drafts'),
+        }
+
         if request.form.get('publish'):
             post.is_draft = False
             msg = 'Succeed to publish the {0}'.format(post_type)
 
-            redirect_url = url_for('blog_admin.pages') if form.post_type.data == 'page' else url_for('blog_admin.posts')
+            redirect_url = post_urls[form.post_type.data]
             post.save()
 
             signals.post_pubished.send(current_app._get_current_object(), post=post)
@@ -169,7 +203,7 @@ class Post(MethodView):
         elif request.form.get('draft'):
             post.is_draft = True
             msg = 'Succeed to save the draft'
-            redirect_url = url_for('blog_admin.page_drafts') if form.post_type.data == 'page' else url_for('blog_admin.drafts')
+            redirect_url = post_urls[form.post_type.data]
             post.save()
         else:
             return self.get(slug, form, is_draft=post.is_draft)
