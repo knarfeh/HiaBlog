@@ -18,6 +18,7 @@ main.add_url_rule('/pages/<slug>/', 'page_detail', views.post_detail, defaults={
 main.add_url_rule('/archive/', 'archive', views.archive)
 main.add_url_rule('/tweet/', 'tweet', views.tweet)
 main.add_url_rule('/eebook/', 'eebook', views.eebook)
+main.add_url_rule('/ticktack', 'ticktack', views.ticktack)
 main.add_url_rule('/users/<username>/', 'author_detail', views.author_detail)
 main.add_url_rule('/atom/', 'recent_feed', views.recent_feed)
 main.add_url_rule('/sitemap.xml/', 'sitemap', views.sitemap)
