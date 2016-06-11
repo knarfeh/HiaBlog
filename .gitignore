@@ -207,3 +207,7 @@ pip-log.txt
 .idea/
 ENV/
 test.html
+
+config.ini
+hia_nginx.conf
+hia_uwsgi.ini

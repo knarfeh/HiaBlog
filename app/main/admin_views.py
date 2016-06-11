@@ -180,7 +180,7 @@ class Post(MethodView):
             redirect_url = post_urls[form.post_type.data]
             post.save()
 
-            signals.post_pubished.send(current_app._get_current_object(), post=post)
+            signals.post_published.send(current_app._get_current_object(), post=post)
 
             try:
                 draft = models.Draft.objects.get(slug=slug)

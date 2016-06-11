@@ -20,8 +20,4 @@ manager.add_command("runserver", Server(
 ))
 
 if __name__ == "__main__":
-    if os.getenv('config'):
-        print "config"
-    else:
-        print "noconfig"
-    manager.run()
+    app.run(host='0.0.0.0', port=8080, debug=False)
