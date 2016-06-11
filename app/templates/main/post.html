@@ -21,7 +21,6 @@
           <span class="meta">Tags:
             {% for tag in post.tags %} <a href="{{ url_for('main.index') }}?tag={{ tag }}">{{ tag }}</a>  {% endfor %}
           </span>
-
         </div>
       </div>
     </div>
@@ -47,11 +46,19 @@
     {% endif %}
       {% if allow_donate %}
       <div class="row">
+        <div align="center">
+          <a id="upvote_post" href="{{ url_for('blog_admin.edit_post', slug=post.slug) }}?is_draft=False">
+            <span class="fa fa-arrow-up fa-stack-2x">{{ post.upvotes }}</span>
+          </a>
+        </div>
+      </div>
+      <br>
+      <br>
+      <div class="row">
         <!-- donate -->
         <div class ="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
           <div align="center">
-            <a id="btn_donate" class="btn_donate center" href="#" title="Donate"><i class="fa fa-jpy"></i>
-            </a>
+            <a id="btn_donate" class="btn_donate center" href="#" title="Donate"><span class="fa fa-jpy fa-stack-2x"></span></a>
           </div>
           <br>
           <!-- weixin -->
@@ -84,14 +91,27 @@
 {% block js %}
 <script src="{{ url_for('static', filename='js/share.min.js') }}"></script>
 <script type="text/javascript">
-    $('table').addClass('table');
-    $('#btn_donate').on('click', function(event){
-        if($('#donate_guide').hasClass('hidden'))
-            $('#donate_guide').removeClass('hidden');
-        else
-            $('#donate_guide').addClass('hidden');
-        return false
-    })
+$('table').addClass('table');
+$('#btn_donate').on('click', function(event){
+    if($('#donate_guide').hasClass('hidden'))
+        $('#donate_guide').removeClass('hidden');
+    else
+        $('#donate_guide').addClass('hidden');
+    return false
+});
+
+$('#upvote_post').on('click', function(event){
+    var url = $(this).attr('href');
+    url = url + '&ajax=true';
+    $.ajax({
+        url: url,
+        type: 'PUT',
+        success: function(result){
+            location.reload();
+        }
+    });
+    return false;
+});
 
 </script>
 {% endblock %}

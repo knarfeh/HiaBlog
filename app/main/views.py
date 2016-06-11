@@ -185,6 +185,11 @@ def tweet():
 def eebook():
     return render_template('main/eebook.html')
 
+
+def ticktack():
+    return render_template('main/ticktack.html')
+
+
 def make_external(url):
     return urljoin(request.url_root, url)
 

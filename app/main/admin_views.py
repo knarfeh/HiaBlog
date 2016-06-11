@@ -45,12 +45,9 @@ class PostsList(MethodView):
     article_model = models.Post
 
     def get(self, post_type='post'):
-
         posts = self.article_model.objects.filter(post_type=post_type)
-
         if not g.identity.can(editor_permission):
             posts = posts.filter(author=get_current_user())
-
         try:
             cur_page = int(request.args.get('page', 1))
         except:
@@ -97,7 +94,7 @@ class PostStatisticDetail(MethodView):
 
         trackers = trackers.paginate(page=cur_page, per_page=PER_PAGE*2)
 
-        data = {'post_statistics':post_statistics, 'trackers': trackers}
+        data = {'post_statistics': post_statistics, 'trackers': trackers}
 
         return render_template(self.template_name, **data)
 
@@ -169,13 +166,11 @@ class Post(MethodView):
         post_urls = {
             'post': url_for('blog_admin.posts'),
             'page': url_for('blog_admin.pages'),
-            'wechat': url_for('blog_admin.wechats'),
         }
 
         draft_urls = {
             'post': url_for('blog_admin.drafts'),
             'page': url_for('blog_admin.page_drafts'),
-            'wechat': url_for('blog_admin.wechat_drafts'),
         }
 
         if request.form.get('publish'):
@@ -236,6 +231,13 @@ class Post(MethodView):
             return 'success'
 
         return redirect(redirect_url)
+
+    def put(self, slug):
+        post = models.Post.objects.get(slug=slug)
+        post.upvotes += 1
+        post.save()
+        if request.args.get('ajax'):
+            return 'success'
 
 
 class SuPostsList(MethodView):
