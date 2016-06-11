@@ -48,17 +48,17 @@
       <div class="row">
         <div align="center">
           <a id="upvote_post" href="{{ url_for('blog_admin.edit_post', slug=post.slug) }}?is_draft=False">
-            <i class="fa fa-arrow-up"></i>
+            <span class="fa fa-arrow-up fa-stack-2x">{{ post.upvotes }}</span>
           </a>
-          <b class="center">{{ post.upvotes }}</b>
         </div>
       </div>
+      <br>
       <br>
       <div class="row">
         <!-- donate -->
         <div class ="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
           <div align="center">
-            <a id="btn_donate" class="btn_donate center" href="#" title="Donate"><i class="fa fa-jpy"></i></a>
+            <a id="btn_donate" class="btn_donate center" href="#" title="Donate"><span class="fa fa-jpy fa-stack-2x"></span></a>
           </div>
           <br>
           <!-- weixin -->
