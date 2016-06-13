@@ -199,7 +199,6 @@ def recent_feed():
 
     posts = models.Post.objects.filter(post_type='post', is_draft=False)[:15]
     for post in posts:
-        # return post.get_absolute_url()
         feed.add(post.title, unicode(post.content_html),
                  content_type='html',
                  author=post.author.username,

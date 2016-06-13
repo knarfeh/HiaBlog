@@ -6,7 +6,7 @@ import random
 
 from flask import request, redirect, render_template, url_for, abort, flash, g, current_app
 from flask.views import MethodView
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required,
 
 
 from . import models, forms, signals
@@ -100,9 +100,10 @@ class PostStatisticDetail(MethodView):
 
 
 class Post(MethodView):
-    decorators = [login_required, writer_permission.require(401)]
     template_name = 'blog_admin/post.html'
 
+    @login_required
+    @writer_permission.require(401)
     def get(self, slug=None, form=None, post_type='post', is_draft=False):
         edit_flag = slug is not None or False
         post = None
@@ -141,6 +142,8 @@ class Post(MethodView):
         # return context
         return render_template(self.template_name, **context)
 
+    @login_required
+    @writer_permission.require(401)
     def post(self, slug=None, post_type='post', is_draft=False):
         article_model = article_models['post'] if request.form.get('publish') else article_models['draft']
 
@@ -206,6 +209,8 @@ class Post(MethodView):
         flash(msg, 'success')
         return redirect(redirect_url)
 
+    @login_required
+    @writer_permission.require(401)
     def delete(self, slug):
         if request.args.get('is_draft') and request.args.get('is_draft').lower() == 'true':
             article_model = article_models['draft']
@@ -232,10 +237,11 @@ class Post(MethodView):
 
         return redirect(redirect_url)
 
+    # @login_required
+    # @writer_permission.require(401)
     def put(self, slug):
         post = models.Post.objects.get(slug=slug)
-        post.upvotes += 1
-        post.save()
+        post.modify(inc__upvotes=1)
         if request.args.get('ajax'):
             return 'success'
 
