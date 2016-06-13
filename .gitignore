@@ -208,6 +208,5 @@ pip-log.txt
 ENV/
 test.html
 
-config.ini
-hia_nginx.conf
-hia_uwsgi.ini
+HiaBlog_nginx.conf
+HiaBlog_uwsgi.ini

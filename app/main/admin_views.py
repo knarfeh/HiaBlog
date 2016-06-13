@@ -6,7 +6,7 @@ import random
 
 from flask import request, redirect, render_template, url_for, abort, flash, g, current_app
 from flask.views import MethodView
-from flask_login import current_user, login_required,
+from flask_login import current_user, login_required
 
 
 from . import models, forms, signals
