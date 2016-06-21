@@ -12,8 +12,9 @@ from config import config
 
 db = MongoEngine()
 login_manager = LoginManager()
+
 login_manager.session_protection = 'strong'
-login_manager.login_view = 'accounts.login'
+login_manager.login_view = 'auth.login'
 
 principals = Principal()
 
@@ -32,10 +33,10 @@ def create_app(config_name):
     principals.init_app(app)
 
     from app.main.urls import main as main_blueprint, blog_admin as blog_admin_blueprint
-    from app.accounts.urls import accounts as accounts_blueprint
+    from app.auth.urls import auth as auth_blueprint
     app.register_blueprint(main_blueprint)
     app.register_blueprint(blog_admin_blueprint, url_prefix='/admin')
-    app.register_blueprint(accounts_blueprint, url_prefix='/accounts')
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
     return app
 

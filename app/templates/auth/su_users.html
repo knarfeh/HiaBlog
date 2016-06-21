@@ -20,13 +20,13 @@
     {% for user in users %}
     <tr id="user-{{ user.username }}">
     <td>{{ loop.index }}</td>
-    <td><a href="{{ url_for('accounts.su_edit_user', username=user.username) }}">{{ user.username }}</td>
+    <td><a href="{{ url_for('auth.su_edit_user', username=user.username) }}">{{ user.username }}</a></td>
     <td>{{ user.email }}</td>
     <td>{{ user.is_active }}</td>
     <td>{{ user.is_email_confirmed }}</td>
     <td>{{ user.is_superuser }}</td>
     <td>
-      <a href="{{ url_for('accounts.su_edit_user', username=user.username) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> </a>
+      <a href="{{ url_for('auth.su_edit_user', username=user.username) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> </a>
     </td>
     </tr>
     {% else %}

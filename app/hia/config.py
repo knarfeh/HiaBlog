@@ -8,18 +8,18 @@ BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 HiaBlogSettings = {
     'post_types': ('post', 'page'),
-    'allow_registration': os.environ.get('allow_registration', 'false').lower() == 'true',
-    'allow_su_creation': os.environ.get('allow_su_creation', 'false').lower() == 'true',
-    'allow_donate': os.environ.get('allow_donate', 'true').lower() == 'true',
+    'allow_registration': os.environ.get('HIA_ALLOW_REGISTRATION', 'false').lower() == 'true',
+    'allow_su_creation': os.environ.get('HIA_ALLOW_SU_CREATION', 'false').lower() == 'true',
+    'allow_donate': os.environ.get('HIA_ALLOW_DONATE', 'true').lower() == 'true',
     'allow_comment': 'true',
-    'auto_role': os.environ.get('auto_role', 'reader').lower(),
+    'auto_role': os.environ.get('HIA_AUTO_ROLE', 'reader').lower(),
 
     'blog_meta': {
-        'name': os.environ.get('name').decode('utf8') if os.environ.get('name') else "Frank's Blog",
-        'subtitle': os.environ.get('subtitle').decode('utf8') if os.environ.get('subtitle') else '',
-        'description': os.environ.get('description').decode('utf8') if os.environ.get('description')
+        'name': os.environ.get('HIA_NAME').decode('utf8') if os.environ.get('HIA_NAME') else "Frank's Blog",
+        'subtitle': os.environ.get('HIA_SUBTITLE').decode('utf8') if os.environ.get('HIA_SUBTITLE') else '',
+        'description': os.environ.get('HIA_DESCRIPTION').decode('utf8') if os.environ.get('HIA_DESCRIPTION')
         else u'It’s better to burn out than to fade away',
-        'owner': os.environ.get('owner').decode('utf8') if os.environ.get('owner') else 'Frank',
+        'owner': os.environ.get('HIA_OWNER').decode('utf8') if os.environ.get('owner') else 'Frank',
         'keywords': os.environ.get('keywords').decode('utf8') if os.environ.get('keywords')
         else 'Python, Flask, MongoDB',
         'google_site_verification': os.environ.get('google_site_verification') or 'TODO',

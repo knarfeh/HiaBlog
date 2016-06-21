@@ -10,8 +10,8 @@ from werkzeug.contrib.atom import AtomFeed
 from mongoengine.queryset.visitor import Q
 
 from . import models, signals
-from app.accounts.models import User
-from app.accounts.permissions import reader_permission
+from app.auth.models import User
+from app.auth.permissions import reader_permission
 from app.hia.config import HiaBlogSettings
 
 PER_PAGE = HiaBlogSettings['pagination'].get('per_page', 10)
@@ -180,10 +180,6 @@ def archive():
 
 def tweet():
     return render_template('main/tweet.html')
-
-
-def eebook():
-    return render_template('main/eebook.html')
 
 
 def ticktack():

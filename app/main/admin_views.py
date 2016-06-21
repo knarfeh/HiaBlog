@@ -10,9 +10,9 @@ from flask_login import current_user, login_required
 
 
 from . import models, forms, signals
-from app.accounts.permissions import admin_permission, editor_permission, writer_permission
+from app.auth.permissions import admin_permission, editor_permission, writer_permission
 from app.hia.config import HiaBlogSettings
-from app.accounts.models import User
+from app.auth.models import User
 
 POST_TYPES = HiaBlogSettings['post_types']
 PER_PAGE = HiaBlogSettings['pagination'].get('admin_per_page', 10)

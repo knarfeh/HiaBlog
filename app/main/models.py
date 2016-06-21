@@ -5,7 +5,7 @@ import datetime
 import markdown2
 
 from flask import url_for
-from app.accounts.models import User
+from app.auth.models import User
 from app.hia import db
 
 

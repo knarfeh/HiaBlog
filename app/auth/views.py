@@ -31,7 +31,7 @@ def login():
 
         flash('Invalid username or password', 'danger')
 
-    return render_template('accounts/login.html', form=form)
+    return render_template('auth/login.html', form=form)
 
 
 @login_required
@@ -45,7 +45,7 @@ def logout():
     identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
 
     flash('You have been logged out', 'success')
-    return redirect(url_for('accounts.login'))
+    return redirect(url_for('auth.login'))
 
 
 def register(create_su=False):
@@ -68,7 +68,7 @@ def register(create_su=False):
             user.is_superuser = True
         user.save()
         return redirect(url_for('main.index'))
-    return render_template('accounts/registration.html', form=form)
+    return render_template('auth/registration.html', form=form)
 
 
 @login_required
@@ -81,8 +81,8 @@ def add_user():
         user.email = form.email.data
         user.display_name = user.username
         user.save()
-        return redirect(url_for('accounts.users'))
-    return render_template('accounts/registration.html', form=form)
+        return redirect(url_for('auth.users'))
+    return render_template('auth/registration.html', form=form)
 
 
 def get_current_user():
@@ -92,7 +92,7 @@ def get_current_user():
 
 class Users(MethodView):
     decorators = [login_required, admin_permission.require(401)]
-    template_name = 'accounts/users.html'
+    template_name = 'auth/users.html'
 
     def get(self):
         users = models.User.objects.all()
@@ -101,7 +101,7 @@ class Users(MethodView):
 
 class User(MethodView):
     decorators = [login_required, admin_permission.require(401)]
-    template_name = 'accounts/user.html'
+    template_name = 'auth/user.html'
 
     def get_context(self, username, form=None):
         if not form:
@@ -126,7 +126,7 @@ class User(MethodView):
             user.role = form.role.data
             user.save()
             flash('Succeed to update user details', 'success')
-            return redirect(url_for('accounts.edit_user', username=username))
+            return redirect(url_for('auth.edit_user', username=username))
 
         return self.get(username, form)
 
@@ -140,12 +140,12 @@ class User(MethodView):
         msg = 'Succeed to delete user'
 
         flash(msg, 'success')
-        return redirect(url_for('accounts.users'))
+        return redirect(url_for('auth.users'))
 
 
 class SuUsers(MethodView):
     decorators = [login_required, su_permission.require(401)]
-    template_name = 'accounts/su_users.html'
+    template_name = 'auth/su_users.html'
 
     def get(self):
         users = models.User.objects.all()
@@ -154,7 +154,7 @@ class SuUsers(MethodView):
 
 class SuUser(MethodView):
     decorators = [login_required, admin_permission.require(401)]
-    template_name = 'accounts/user.html'
+    template_name = 'auth/user.html'
 
     def get_context(self, username, form=None):
         if not form:
@@ -196,14 +196,14 @@ class SuUser(MethodView):
             msg = 'Succeed to update user profile'
             flash(msg, 'success')
 
-            return redirect(url_for('accounts.su_edit_user', username=user.username))
+            return redirect(url_for('auth.su_edit_user', username=user.username))
 
         return self.get(form)
 
 
 class Profile(MethodView):
     decorators = [login_required]
-    template_name = 'accounts/settings.html'
+    template_name = 'auth/settings.html'
 
     def get(self, form=None):
         if not form:
@@ -249,7 +249,7 @@ class Profile(MethodView):
 
 class Password(MethodView):
     decorators = [login_required]
-    template_name = 'accounts/password.html'
+    template_name = 'auth/password.html'
 
     def get(self, form=None):
         if not form:
@@ -268,6 +268,6 @@ class Password(MethodView):
             msg = 'Succeed to update password'
             flash(msg, 'success')
 
-            return redirect(url_for('accounts.password'))
+            return redirect(url_for('auth.password'))
 
         return self.get(form)

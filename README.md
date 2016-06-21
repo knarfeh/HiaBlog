@@ -1,6 +1,6 @@
 # Hia
 
-一个基于 Flask + MongoDB 的博客系统， fork from [OctBlog](https://github.com/flyhigher139/OctBlog)
+学习 Flask + MongoDB 写的多人博客系统， fork from [OctBlog](https://github.com/flyhigher139/OctBlog)
 
 ## 后端
 
@@ -38,7 +38,7 @@ $ python manage.py runserver
 
 改 config.py 的 allow_registration 变量，使得可以注册管理员。 
 
-访问 `http://localhost:5001/accounts/registration/su` 注册管理员
+访问 `http://localhost:5001/auth/registration/su` 注册管理员
 
 访问 `http://localhost:5001/admin` 进行登录
 

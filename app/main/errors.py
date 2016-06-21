@@ -3,7 +3,6 @@
 
 
 from flask import render_template
-
 from .views import get_base_data
 
 

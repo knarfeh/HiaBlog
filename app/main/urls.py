@@ -1,9 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-
 from flask import Blueprint
-
 from . import views, admin_views, errors
 
 main = Blueprint('main', __name__)
@@ -17,7 +15,6 @@ main.add_url_rule('/posts/<slug>/<post_type>/preview/', 'post_general_preview', 
 main.add_url_rule('/pages/<slug>/', 'page_detail', views.post_detail, defaults={'post_type': 'page'})
 main.add_url_rule('/archive/', 'archive', views.archive)
 main.add_url_rule('/tweet/', 'tweet', views.tweet)
-main.add_url_rule('/eebook/', 'eebook', views.eebook)
 main.add_url_rule('/ticktack', 'ticktack', views.ticktack)
 main.add_url_rule('/users/<username>/', 'author_detail', views.author_detail)
 main.add_url_rule('/atom/', 'recent_feed', views.recent_feed)
@@ -37,7 +34,8 @@ blog_admin.add_url_rule('/new-post/', view_func=admin_views.Post.as_view('new_po
 blog_admin.add_url_rule('/posts/<slug>/', view_func=admin_views.Post.as_view('edit_post'))
 
 blog_admin.add_url_rule('/pages/', view_func=admin_views.PostsList.as_view('pages'), defaults={'post_type': 'page'})
-blog_admin.add_url_rule('/pages/draft/', view_func=admin_views.DraftList.as_view('page_drafts'), defaults={'post_type': 'page'})
+blog_admin.add_url_rule('/pages/draft/', view_func=admin_views.DraftList.as_view('page_drafts'),
+                        defaults={'post_type': 'page'})
 blog_admin.add_url_rule('/new-page/', view_func=admin_views.Post.as_view('new_page'), defaults={'post_type': 'page'})
 
 blog_admin.add_url_rule('/posts/statistics/', view_func=admin_views.PostStatisticList.as_view('post_statistics'))
