@@ -94,7 +94,7 @@ class PostStatisticDetail(MethodView):
 
         trackers = trackers.paginate(page=cur_page, per_page=PER_PAGE*2)
 
-        data = {'post_statistics': post_statistics, 'trackers': trackers}
+        data = {'post_statistics': post_statistics, 'trackers': trackers, 'post': post}
 
         return render_template(self.template_name, **data)
 
@@ -111,6 +111,7 @@ class Post(MethodView):
         if edit_flag:
             try:
                 post = models.Draft.objects.get(slug=slug)
+                post.from_draft = 'true'
             except models.Draft.DoesNotExist:
                 post = models.Post.objects.get_or_404(slug=slug)
 

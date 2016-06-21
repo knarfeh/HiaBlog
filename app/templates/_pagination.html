@@ -13,7 +13,7 @@
         </li>
       {% endif %}
 
-      {%- for page in pagination.iter_pages() %}
+      {% for page in pagination.iter_pages() %}
         {% if page %}
           {% if page != pagination.page %}
             <li><a href="?page={{ page }}">{{ page }}</a></li>
@@ -21,7 +21,7 @@
             <li class="disabled"><a href="?page={{ page }}"><strong>{{ page }}</strong></a></li>
           {% endif %}
         {% else %}
-          <span class=ellipsis>…</span>
+          <li><a href="#">...</a></li>
         {% endif %}
       {%- endfor %}
 

@@ -19,15 +19,15 @@ HiaBlogSettings = {
         'subtitle': os.environ.get('HIA_SUBTITLE').decode('utf8') if os.environ.get('HIA_SUBTITLE') else '',
         'description': os.environ.get('HIA_DESCRIPTION').decode('utf8') if os.environ.get('HIA_DESCRIPTION')
         else u'It’s better to burn out than to fade away',
-        'owner': os.environ.get('HIA_OWNER').decode('utf8') if os.environ.get('owner') else 'Frank',
-        'keywords': os.environ.get('keywords').decode('utf8') if os.environ.get('keywords')
+        'owner': os.environ.get('HIA_OWNER').decode('utf8') if os.environ.get('HIA_OWNER') else 'Frank',
+        'keywords': os.environ.get('HIA_KEYWORDS').decode('utf8') if os.environ.get('HIA_KEYWORDS')
         else 'Python, Flask, MongoDB',
-        'google_site_verification': os.environ.get('google_site_verification') or 'TODO',
-        'baidu_site_verification': os.environ.get('baidu_site_verification') or 'TODO',
-        'sogou_site_verification': os.environ.get('sogou_site_verification') or 'TODO',
+        'google_site_verification': os.environ.get('HIA_GOOGLE_SITE_VERIFICATION') or 'TODO',
+        'baidu_site_verification': os.environ.get('HIA_BAIDU_SITE_VERIFICATION') or 'TODO',
+        'sogou_site_verification': os.environ.get('HIA_SOGOU_SITE_VERIFICATION') or 'TODO',
     },
     'search_engine_submit_urls': {
-        'baidu': os.environ.get('baidu_submit_url')
+        'baidu': os.environ.get('HIA_BAIDU_submit_url')
     },
     'pagination': {
         'per_page': int(os.environ.get('per_page', 5)),
