@@ -36,9 +36,10 @@ HiaBlogSettings = {
     },
     'blog_comment': {
         'allow_comment': os.environ.get('allow_comment', 'true').lower() == 'true',
-        'comment_type': os.environ.get('comment_type', 'duoshuo').lower(),
+        'comment_type': os.environ.get('comment_type', 'hiablog').lower(),
         'comment_opt': {
-            'duoshuo': 'knarfeh',     # shotname of duoshuo
+            'duoshuo': 'knarfeh',       # short name of duoshuo
+            'hiablog': 'hia-blog',      # short name of hia-blog
         }
     },
     'donation': {
@@ -46,6 +47,8 @@ HiaBlogSettings = {
         'donation_msg': os.environ.get('donation_msg', u'如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！')
     },
     'allow_share_article': os.environ.get('allow_share_article', 'true').lower() == 'true',
+    'gavatar_cdn_base': os.environ.get('gavatar_cdn_base', '//cdn.v2ex.com/gravatar/'),
+    'gavatar_default_image': os.environ.get('gavatar_default_image', 'http://7xi5vu.com1.z0.glb.clouddn.com/user-avatar.jpg'),
 }
 
 

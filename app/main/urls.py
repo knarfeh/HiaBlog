@@ -8,7 +8,7 @@ main = Blueprint('main', __name__)
 
 main.add_url_rule('/', 'index', views.list_posts)
 main.add_url_rule('/posts/', 'posts', views.list_posts)
-main.add_url_rule('/posts/<slug>/', 'post_detail', views.post_detail)
+main.add_url_rule('/posts/<slug>/', 'post_detail', views.post_detail, methods=['GET', 'POST'])
 main.add_url_rule('/post/<slug>/', 'post_detail_fix', views.post_detail, defaults={'fix': True})
 main.add_url_rule('/posts/<slug>/preview/', 'post_preview', views.post_detail, defaults={'is_preview': True})
 main.add_url_rule('/posts/<slug>/<post_type>/preview/', 'post_general_preview', views.post_detail_general)
@@ -41,6 +41,13 @@ blog_admin.add_url_rule('/new-page/', view_func=admin_views.Post.as_view('new_pa
 blog_admin.add_url_rule('/posts/statistics/', view_func=admin_views.PostStatisticList.as_view('post_statistics'))
 blog_admin.add_url_rule('/posts/statistics/<slug>/',
                         view_func=admin_views.PostStatisticDetail.as_view('post_statistics_detail'))
+
+blog_admin.add_url_rule('/posts/comments/', view_func=admin_views.Comment.as_view('comments'))
+blog_admin.add_url_rule('/posts/comments/approved/', view_func=admin_views.Comment.as_view('comments_approved'), defaults={'status':'approved'})
+blog_admin.add_url_rule('/posts/comments/spam/', view_func=admin_views.Comment.as_view('comments_spam'), defaults={'status':'spam'})
+blog_admin.add_url_rule('/posts/comments/<pk>/action/', view_func=admin_views.Comment.as_view('comment_action'))
+blog_admin.add_url_rule('/posts/comments/import/', view_func=admin_views.ImportCommentView.as_view('import_comments'))
+
 
 blog_admin.add_url_rule('/su/posts/', view_func=admin_views.SuPostsList.as_view('su_posts'))
 blog_admin.add_url_rule('/su/posts/<slug>/', view_func=admin_views.SuPost.as_view('su_post_edit'))

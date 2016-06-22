@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from urlparse import urljoin
-from flask import request, render_template, abort, g
+from flask import request, render_template, abort, g, url_for, flash, redirect, session
 from flask import current_app, make_response
 from flask_login import current_user
 
 from werkzeug.contrib.atom import AtomFeed
 from mongoengine.queryset.visitor import Q
 
-from . import models, signals
+from . import models, signals, forms
 from app.auth.models import User
 from app.auth.permissions import reader_permission
 from app.hia.config import HiaBlogSettings
@@ -87,15 +87,29 @@ def post_detail(slug, post_type='post', fix=False, is_preview=False):
 
     data = get_base_data()
     data['post'] = post
+
+    if request.form:
+        form = forms.CommentForm(obj=request.form)
+    else:
+        obj = {'author': session.get('author'), 'email': session.get('email'), 'homepage': session.get('homepage'), }
+        form = forms.CommentForm(**obj)
+
+    if request.form.get('hia-comment') and form.validate_on_submit():
+        hiablog_create_comment(form, post)
+        url = '{0}#comment'.format(url_for('main.post_detail', slug=slug))
+        msg = u'评论成功, 等待管理者审查通过.'
+        flash(msg, 'success')
+        return redirect(url)
+
     data['allow_donate'] = HiaBlogSettings['donation']['allow_donate']
     data['donation_msg'] = HiaBlogSettings['donation']['donation_msg']
 
     data['allow_comment'] = HiaBlogSettings['blog_comment']['allow_comment']
     if data['allow_comment']:
         comment_type = HiaBlogSettings['blog_comment']['comment_type']
-        comment_shortname = HiaBlogSettings['blog_comment']['comment_opt']['duoshuo']
+        comment_shortname = HiaBlogSettings['blog_comment']['comment_opt'][comment_type]
         comment_func = get_comment_func(comment_type)
-        data['comment_html'] = comment_func(comment_shortname, slug, post.title, request.base_url) if comment_func else ''
+        data['comment_html'] = comment_func(slug, post.title, request.base_url, comment_shortname, form=form) if comment_func else ''
 
     data['allow_share_article'] = HiaBlogSettings['allow_share_article']
 
@@ -131,13 +145,40 @@ def author_detail(username):
 
 
 def get_comment_func(comment_type):
-    if comment_type == 'duoshuo':
-        return duoshuo_comment
-    else:
-        return None
+    comment_func = {
+        'hiablog': hiablog_comment,
+        'duoshuo': duoshuo_comment,
+    }
+
+    return comment_func.get(comment_type)
 
 
-def duoshuo_comment(duoshuo_shortname, post_id, post_title, post_url):
+def hiablog_comment(post_id, post_title, post_url, comment_shortname, form=None, *args, **kwargs):
+    template_name = 'main/comments.html'
+    comments = models.Comment.objects(post_slug=post_id, status='approved').order_by('pub_time')
+    data = {
+        'form': form,
+        'comments': comments,
+        'slug': post_id,
+    }
+    return render_template(template_name, **data)
+
+
+def hiablog_create_comment(form, post):
+    comment = models.Comment()
+    comment.author = form.author.data.strip()
+    comment.email = form.email.data.strip()
+    comment.homepage = form.homepage.data.strip() or None
+    comment.post_slug = post.slug
+    comment.post_title = post.title
+    comment.md_content = form.content.data.strip()
+    comment.save()
+    session['author'] = form.author.data.strip()
+    session['email'] = form.email.data.strip()
+    session['homepage'] = form.homepage.data.strip()
+
+
+def duoshuo_comment(post_id, post_title, post_url, duoshuo_shortname, *args, **kwargs):
     u"""
     Create duoshuo script by params
     :param duoshuo_shortname:
