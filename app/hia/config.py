@@ -27,28 +27,28 @@ HiaBlogSettings = {
         'sogou_site_verification': os.environ.get('HIA_SOGOU_SITE_VERIFICATION') or 'TODO',
     },
     'search_engine_submit_urls': {
-        'baidu': os.environ.get('HIA_BAIDU_submit_url')
+        'baidu': os.environ.get('HIA_BAIDU_SUBMIT_URL')
     },
     'pagination': {
-        'per_page': int(os.environ.get('per_page', 5)),
-        'admin_per_page': int(os.environ.get('admin_per_page', 10)),
-        'archive_per_page': int(os.environ.get('admin_per_page', 10)),
+        'per_page': int(os.environ.get('PER_PAGE', 5)),
+        'admin_per_page': int(os.environ.get('ADMIN_PER_PAGE', 10)),
+        'archive_per_page': int(os.environ.get('ADMIN_PER_PAGE', 10)),
     },
     'blog_comment': {
-        'allow_comment': os.environ.get('allow_comment', 'true').lower() == 'true',
-        'comment_type': os.environ.get('comment_type', 'hiablog').lower(),
+        'allow_comment': os.environ.get('ALLOW_COMMENT', 'true').lower() == 'true',
+        'comment_type': os.environ.get('COMMENT_TYPE', 'hiablog').lower(),
         'comment_opt': {
             'duoshuo': 'knarfeh',       # short name of duoshuo
             'hiablog': 'hia-blog',      # short name of hia-blog
         }
     },
     'donation': {
-        'allow_donate': os.environ.get('allow_donate', 'true').lower() == 'true',
-        'donation_msg': os.environ.get('donation_msg', u'如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！')
+        'allow_donate': os.environ.get('ALLOW_DONATE', 'true').lower() == 'true',
+        'donation_msg': os.environ.get('DONATION_MSG', u'如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！')
     },
-    'allow_share_article': os.environ.get('allow_share_article', 'true').lower() == 'true',
-    'gavatar_cdn_base': os.environ.get('gavatar_cdn_base', '//cdn.v2ex.com/gravatar/'),
-    'gavatar_default_image': os.environ.get('gavatar_default_image', 'http://7xi5vu.com1.z0.glb.clouddn.com/user-avatar.jpg'),
+    'allow_share_article': os.environ.get('ALLOW_SHARE_ARTICLE', 'true').lower() == 'true',
+    'gavatar_cdn_base': os.environ.get('GAVATAR_CDN_BASE', '//cdn.v2ex.com/gravatar/'),
+    'gavatar_default_image': os.environ.get('GAVATAR_DEFAULT_IMAGE', 'http://7xi5vu.com1.z0.glb.clouddn.com/user-avatar.jpg'),
 }
 
 
