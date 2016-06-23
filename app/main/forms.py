@@ -35,10 +35,10 @@ SuPostForm = model_form(models.Post, exclude=['pub_time',
 
 
 class CommentForm(Form):
-    email = StringField('* Email', validators=[DataRequired(), Length(1, 128), Email()])
-    author = StringField('* Name', validators=[DataRequired(), Length(1, 128)])
-    homepage = StringField('Homepage', validators=[URL(), Optional()])
-    content = TextAreaField('* Comment <small><span class="label label-info">markdown</span></small>',
+    email = StringField(u'邮箱(必填，不公开)', validators=[DataRequired(), Length(1, 128), Email()])
+    author = StringField(u'名称(必填)', validators=[DataRequired(), Length(1, 128)])
+    homepage = StringField(u'主页(选填)', validators=[URL(), Optional()])
+    content = TextAreaField(u'留言(必填，支持<small><span class="label label-info">markdown</span></small>)',
                             validators=[DataRequired()])
     comment_id = HiddenField('comment_id')
 

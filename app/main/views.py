@@ -96,7 +96,13 @@ def post_detail(slug, post_type='post', fix=False, is_preview=False):
 
     if request.form.get('hia-comment') and form.validate_on_submit():
         hiablog_create_comment(form, post)
-        url = '{0}#comment'.format(url_for('main.post_detail', slug=slug))
+        if post_type == 'post':
+            url = '{0}#comment'.format(url_for('main.post_detail', slug=slug))
+        elif post_type == 'page':
+            url = '{0}#comment'.format(url_for('main.page_detail', slug=slug))
+        else:
+            print(u"post_type:" + str(post_type))
+            abort(404)
         msg = u'评论成功, 等待管理者审查通过.'
         flash(msg, 'success')
         return redirect(url)

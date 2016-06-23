@@ -181,7 +181,7 @@ class Comment(db.Document):
             self.pub_time = datetime.datetime.now()
 
         self.update_time = datetime.datetime.now()
-        if self.gavatar_id=='00000000000':
+        if self.gavatar_id == '00000000000':
             self.reset_gavatar_id()
 
         return super(Comment, self).save(*args, **kwargs)
@@ -198,7 +198,6 @@ class Comment(db.Document):
             gavatar_url = '{0}?{1}'.format(gavatar_url, urllib.urlencode(params))
 
         return gavatar_url
-
 
     def __unicode__(self):
         return self.md_content[:64]

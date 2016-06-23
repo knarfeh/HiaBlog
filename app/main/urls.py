@@ -12,7 +12,8 @@ main.add_url_rule('/posts/<slug>/', 'post_detail', views.post_detail, methods=['
 main.add_url_rule('/post/<slug>/', 'post_detail_fix', views.post_detail, defaults={'fix': True})
 main.add_url_rule('/posts/<slug>/preview/', 'post_preview', views.post_detail, defaults={'is_preview': True})
 main.add_url_rule('/posts/<slug>/<post_type>/preview/', 'post_general_preview', views.post_detail_general)
-main.add_url_rule('/pages/<slug>/', 'page_detail', views.post_detail, defaults={'post_type': 'page'})
+main.add_url_rule('/pages/<slug>/', 'page_detail', views.post_detail,
+                  methods=['GET', 'POST'], defaults={'post_type': 'page'})
 main.add_url_rule('/archive/', 'archive', views.archive)
 main.add_url_rule('/tweet/', 'tweet', views.tweet)
 main.add_url_rule('/ticktack', 'ticktack', views.ticktack)
@@ -33,7 +34,8 @@ blog_admin.add_url_rule('/posts/draft/', view_func=admin_views.DraftList.as_view
 blog_admin.add_url_rule('/new-post/', view_func=admin_views.Post.as_view('new_post'))
 blog_admin.add_url_rule('/posts/<slug>/', view_func=admin_views.Post.as_view('edit_post'))
 
-blog_admin.add_url_rule('/pages/', view_func=admin_views.PostsList.as_view('pages'), defaults={'post_type': 'page'})
+blog_admin.add_url_rule('/pages/', view_func=admin_views.PostsList.as_view('pages'),
+                        defaults={'post_type': 'page'})
 blog_admin.add_url_rule('/pages/draft/', view_func=admin_views.DraftList.as_view('page_drafts'),
                         defaults={'post_type': 'page'})
 blog_admin.add_url_rule('/new-page/', view_func=admin_views.Post.as_view('new_page'), defaults={'post_type': 'page'})

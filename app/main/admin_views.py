@@ -243,7 +243,8 @@ class Post(MethodView):
 
     # @login_required
     # @writer_permission.require(401)
-    def put(self, slug):
+    @staticmethod
+    def put(slug):
         post = models.Post.objects.get(slug=slug)
         post.modify(inc__upvotes=1)
         if request.args.get('ajax'):
@@ -344,9 +345,11 @@ class SuPost(MethodView):
         flash('Succeed to update post', 'success')
         return redirect(redirect_url)
 
+
 class Comment(MethodView):
     decorators = [login_required, editor_permission.require(401)]
     template_name = 'blog_admin/comments.html'
+
     def get(self, status='pending', pk=None):
         if pk:
             return redirect(url_for('blog_admin.comments'))
