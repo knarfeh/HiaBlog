@@ -26,6 +26,7 @@ def get_base_data():
 
 
 def list_posts():
+    flash(u"欢迎访问，本站是博主学习 Flask 的实验性网站，想查看更多博文可以访问 http://knarfeh.com", category='notice')
     posts = models.Post.objects.filter(post_type='post', is_draft=False).order_by('-pub_time')
     # categories = posts.distinct('category')
     tags = posts.distinct('tags')
